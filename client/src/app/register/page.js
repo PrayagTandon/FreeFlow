@@ -55,6 +55,8 @@ export default function Register() {
         </form>
         <div className="register-login-link">
           Already signed up? <Link href="/login">Log in here.</Link>
+          <br />
+          <Link href="/">Back to Homepage</Link>
         </div>
       </div>
     </div>

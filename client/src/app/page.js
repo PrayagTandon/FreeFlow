@@ -2,6 +2,7 @@
 import './home.css';
 import Link from 'next/link';
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 const professionData = [
   {
@@ -72,23 +73,142 @@ const faqData = [
 ];
 
 export default function HomePage() {
+  const router = useRouter();
   const [selectedProfession, setSelectedProfession] = useState(null);
   const [howMode, setHowMode] = useState('Client');
   const [selectedStep, setSelectedStep] = useState(1); // default to center step
   const [faqOpen, setFaqOpen] = useState([]);
+  const [aboutOpen, setAboutOpen] = useState(false);
+  const [contactOpen, setContactOpen] = useState(false);
+  const [resourcesOpen, setResourcesOpen] = useState(false);
+  const [howModalOpen, setHowModalOpen] = useState(false);
 
   const steps = howMode === 'Client' ? howItWorksClient : howItWorksFreelancer;
 
   return (
     <div className="homepage-container">
+      {/* How It Works Modal */}
+      {howModalOpen && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <button className="modal-close" onClick={() => setHowModalOpen(false)}>&times;</button>
+            <h2>How It Works</h2>
+            <p style={{ marginBottom: '1.5rem' }}>
+              <strong>FreeFlow</strong> connects clients and freelancers using blockchain-powered smart contracts. Here's how it works:
+            </p>
+            <ol style={{ marginBottom: '1.5rem', paddingLeft: '1.2rem' }}>
+              <li><strong>Post or Find Projects:</strong> Clients post jobs, freelancers browse and apply.</li>
+              <li><strong>Smart Escrow:</strong> Clients fund milestones, freelancers start work with confidence.</li>
+              <li><strong>Delivery & Payment:</strong> Work is delivered, funds are released instantly upon approval.</li>
+              <li><strong>Dispute Resolution:</strong> If needed, disputes are resolved transparently by the community.</li>
+              <li><strong>Reputation:</strong> Both parties build on-chain trust scores for future work.</li>
+            </ol>
+            <a href="/" className="modal-link">Go to Homepage</a>
+          </div>
+        </div>
+      )}
+      {/* About Us Modal */}
+      {aboutOpen && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <button className="modal-close" onClick={() => setAboutOpen(false)}>&times;</button>
+            <h2>About Us</h2>
+            <p style={{ marginBottom: '1.5rem' }}>
+              <strong>FreeFlow</strong> is reimagining the future of freelancing by putting control, trust, and fairness back into the hands of freelancers and clients.
+            </p>
+
+            <p style={{ marginBottom: '1.5rem' }}>
+              We believe that skilled professionals and employers deserve a platform where they can work together freely without high fees, restrictive rules, or centralized control. That's why we built <strong>FreeFlow</strong> as a <em>decentralized freelancing platform</em>, powered by blockchain technology.
+            </p>
+
+            <p style={{ marginBottom: '1.5rem' }}>
+              Instead of relying on middlemen, FreeFlow uses smart contracts to manage everything from job postings and milestone payments to dispute resolution. Freelancers get paid on time. Clients only release funds when work is delivered. And disputes are resolved transparently by the community or through decentralized courts.
+            </p>
+
+            <p style={{ marginBottom: '1.5rem' }}>
+              To help users build trust, we've developed a <strong>Trust Score System</strong>. Freelancers and employers are rated based on job success, reviews, dispute history, and identity verification like GitHub, portfolio, or company email.
+            </p>
+
+            <p style={{ marginBottom: '1.5rem' }}>
+              What sets us apart is our <strong>community-first approach</strong>. FreeFlow is governed by its users—freelancers and clients who vote on how the platform grows, evolves, and operates.
+            </p>
+
+            <p style={{ marginBottom: '2rem' }}>
+              <em>We're not just building a platform. We're building a fairer digital economy.</em>
+              <br />
+              <strong>Welcome to FreeFlow.</strong> Work without barriers. Trust without borders.
+            </p>
+
+            <a href="/" className="modal-link">Go to Homepage</a>
+          </div>
+        </div>
+      )}
+      {/* Contact Us Modal */}
+      {contactOpen && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <button className="modal-close" onClick={() => setContactOpen(false)}>&times;</button>
+            <h2>Contact Us</h2>
+            <p style={{ marginBottom: '1.5rem' }}>
+              At <strong>FreeFlow</strong>, we're proud to be a truly global team. With core developers and contributors based in <strong>India</strong>, <strong>Dubai</strong>, and <strong>Toronto</strong>, we're building a decentralized freelancing platform that supports talent across borders—because our mission is global by design.
+            </p>
+
+            <p style={{ marginBottom: '2rem' }}>
+              Whether you have a question, a partnership idea, or just want to connect, feel free to reach out to our regional teams below.
+            </p>
+
+            <div style={{ marginBottom: '2rem' }}>
+              <h4>📍 India</h4>
+              <p>Email: <a href="mailto:india@freeflow.network">india@freeflow.network</a><br />
+                 Location: Mumbai  </p>
+            </div>
+
+            <div style={{ marginBottom: '2rem' }}>
+              <h4>📍 United Arab Emirates</h4>
+              <p>Email: <a href="mailto:dubai@freeflow.network">dubai@freeflow.network</a><br />
+                 Location: Dubai</p>
+            </div>
+
+            <div style={{ marginBottom: '2rem' }}>
+              <h4>📍 Canada</h4>
+              <p>Email: <a href="mailto:toronto@freeflow.network">toronto@freeflow.network</a><br />
+                 Location:  Toronto</p>
+            </div>
+
+            <p style={{ marginBottom: '2rem' }}>
+              For general inquiries, please email us at: <a href="mailto:hello@freeflow.network">hello@freeflow.network</a>
+            </p> <a href="/" className="modal-link">Go to Homepage</a>
+          </div>
+        </div>
+      )}
+      {/* Resources Modal */}
+      {resourcesOpen && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <button className="modal-close" onClick={() => setResourcesOpen(false)}>&times;</button>
+            <h2>Resources</h2>
+            <p style={{ marginBottom: '1.5rem' }}>
+              Here are some helpful resources for getting started and making the most of FreeFlow:
+            </p>
+            <ul style={{ marginBottom: '2rem', paddingLeft: '1.2rem' }}>
+              <li><a href="#" className="modal-link">Getting Started Guide</a></li>
+              <li><a href="#" className="modal-link">Smart Contract Security</a></li>
+              <li><a href="#" className="modal-link">Community Forum</a></li>
+              <li><a href="#" className="modal-link">API Documentation</a></li>
+            </ul>
+            <a href="/" className="modal-link">Go to Homepage</a>
+          </div>
+        </div>
+      )}
       {/* Navbar */}
       <nav className="navbar gradient-bg">
         <div className="navbar-left">
           <span className="logo">Logo</span>
-          <a href="#" className="nav-link">How It Works ▾</a>
-          <a href="#" className="nav-link">Search ▾</a>
-          <a href="#" className="nav-link">Why Us</a>
-          <a href="#" className="nav-link">Contact Us</a>
+          <a href="#" className="nav-link" onClick={e => { e.preventDefault(); setHowModalOpen(true); }}>How It Works ▾</a>
+          <a href="#" className="nav-link" onClick={e => e.preventDefault()}>Search ▾</a>
+          <a href="#" className="nav-link" onClick={e => { e.preventDefault(); setAboutOpen(true); }}>About Us</a>
+          <a href="#" className="nav-link" onClick={e => { e.preventDefault(); setContactOpen(true); }}>Contact Us</a>
+          <a href="#" className="nav-link" onClick={e => { e.preventDefault(); setResourcesOpen(true); }}>Resources</a>
           <a href="#" className="nav-link">Pricing</a>
         </div>
         <div className="navbar-right">
@@ -118,7 +238,12 @@ export default function HomePage() {
             <div
               key={prof.name}
               className={`profession-card${selectedProfession === idx ? ' prof-card-highlight' : ''}`}
-              onClick={() => setSelectedProfession(idx)}
+              onClick={() => {
+                setSelectedProfession(idx);
+                if (prof.name === 'Development & Coding' || prof.name === 'Freelancer') {
+                  router.push('/freelancer-home');
+                }
+              }}
               tabIndex={0}
               role="button"
               aria-pressed={selectedProfession === idx}
@@ -254,14 +379,14 @@ export default function HomePage() {
           <div className="footer-links-group">
             <div className="footer-links-title">For Users</div>
             <a href="#">For Clients</a>
-            <a href="#">For Freelancers</a>
-            <a href="#">Help</a>
+            <a href="#" onClick={e => { e.preventDefault(); router.push('/freelancer-home'); }}>For Freelancers</a>
+            <a href="#" onClick={e => { e.preventDefault(); router.push('/dashboard'); }}>Help</a>
           </div>
           <div className="footer-links-group">
             <div className="footer-links-title">Company</div>
-            <a href="#">About Us</a>
-            <a href="#">Resources</a>
-            <a href="#">Contact Us</a>
+            <a href="#" onClick={e => { e.preventDefault(); setAboutOpen(true); }}>About Us</a>
+            <a href="#" onClick={e => { e.preventDefault(); setResourcesOpen(true); }}>Resources</a>
+            <a href="#" onClick={e => { e.preventDefault(); setContactOpen(true); }}>Contact Us</a>
           </div>
           <div className="footer-logo-group">
             <span className="footer-logo">FreeFlow</span>
