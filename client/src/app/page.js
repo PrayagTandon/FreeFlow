@@ -3,6 +3,7 @@ import './home.css';
 import Link from 'next/link';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 
 const professionData = [
   {
@@ -94,7 +95,7 @@ export default function HomePage() {
             <button className="modal-close" onClick={() => setHowModalOpen(false)}>&times;</button>
             <h2>How It Works</h2>
             <p style={{ marginBottom: '1.5rem' }}>
-              <strong>FreeFlow</strong> connects clients and freelancers using blockchain-powered smart contracts. Here's how it works:
+              <strong>FreeFlow</strong> connects clients and freelancers using blockchain-powered smart contracts. Here&apos;s how it works:
             </p>
             <ol style={{ marginBottom: '1.5rem', paddingLeft: '1.2rem' }}>
               <li><strong>Post or Find Projects:</strong> Clients post jobs, freelancers browse and apply.</li>
@@ -103,7 +104,7 @@ export default function HomePage() {
               <li><strong>Dispute Resolution:</strong> If needed, disputes are resolved transparently by the community.</li>
               <li><strong>Reputation:</strong> Both parties build on-chain trust scores for future work.</li>
             </ol>
-            <a href="/" className="modal-link">Go to Homepage</a>
+            <Link href="/" className="modal-link">Go to Homepage</Link>
           </div>
         </div>
       )}
@@ -118,7 +119,7 @@ export default function HomePage() {
             </p>
 
             <p style={{ marginBottom: '1.5rem' }}>
-              We believe that skilled professionals and employers deserve a platform where they can work together freely without high fees, restrictive rules, or centralized control. That's why we built <strong>FreeFlow</strong> as a <em>decentralized freelancing platform</em>, powered by blockchain technology.
+              We believe that skilled professionals and employers deserve a platform where they can work together freely without high fees, restrictive rules, or centralized control. That&apos;s why we built <strong>FreeFlow</strong> as a <em>decentralized freelancing platform</em>, powered by blockchain technology.
             </p>
 
             <p style={{ marginBottom: '1.5rem' }}>
@@ -126,7 +127,7 @@ export default function HomePage() {
             </p>
 
             <p style={{ marginBottom: '1.5rem' }}>
-              To help users build trust, we've developed a <strong>Trust Score System</strong>. Freelancers and employers are rated based on job success, reviews, dispute history, and identity verification like GitHub, portfolio, or company email.
+              To help users build trust, we&apos;ve developed a <strong>Trust Score System</strong>. Freelancers and employers are rated based on job success, reviews, dispute history, and identity verification like GitHub, portfolio, or company email.
             </p>
 
             <p style={{ marginBottom: '1.5rem' }}>
@@ -134,12 +135,12 @@ export default function HomePage() {
             </p>
 
             <p style={{ marginBottom: '2rem' }}>
-              <em>We're not just building a platform. We're building a fairer digital economy.</em>
+              <em>We&apos;re not just building a platform. We&apos;re building a fairer digital economy.</em>
               <br />
               <strong>Welcome to FreeFlow.</strong> Work without barriers. Trust without borders.
             </p>
 
-            <a href="/" className="modal-link">Go to Homepage</a>
+            <Link href="/" className="modal-link">Go to Homepage</Link>
           </div>
         </div>
       )}
@@ -150,7 +151,7 @@ export default function HomePage() {
             <button className="modal-close" onClick={() => setContactOpen(false)}>&times;</button>
             <h2>Contact Us</h2>
             <p style={{ marginBottom: '1.5rem' }}>
-              At <strong>FreeFlow</strong>, we're proud to be a truly global team. With core developers and contributors based in <strong>India</strong>, <strong>Dubai</strong>, and <strong>Toronto</strong>, we're building a decentralized freelancing platform that supports talent across borders—because our mission is global by design.
+              At <strong>FreeFlow</strong>, we&apos;re proud to be a truly global team. With core developers and contributors based in <strong>India</strong>, <strong>Dubai</strong>, and <strong>Toronto</strong>, we&apos;re building a decentralized freelancing platform that supports talent across borders—because our mission is global by design.
             </p>
 
             <p style={{ marginBottom: '2rem' }}>
@@ -160,24 +161,24 @@ export default function HomePage() {
             <div style={{ marginBottom: '2rem' }}>
               <h4>📍 India</h4>
               <p>Email: <a href="mailto:india@freeflow.network">india@freeflow.network</a><br />
-                 Location: Mumbai  </p>
+                Location: Mumbai  </p>
             </div>
 
             <div style={{ marginBottom: '2rem' }}>
               <h4>📍 United Arab Emirates</h4>
               <p>Email: <a href="mailto:dubai@freeflow.network">dubai@freeflow.network</a><br />
-                 Location: Dubai</p>
+                Location: Dubai</p>
             </div>
 
             <div style={{ marginBottom: '2rem' }}>
               <h4>📍 Canada</h4>
               <p>Email: <a href="mailto:toronto@freeflow.network">toronto@freeflow.network</a><br />
-                 Location:  Toronto</p>
+                Location:  Toronto</p>
             </div>
 
             <p style={{ marginBottom: '2rem' }}>
               For general inquiries, please email us at: <a href="mailto:hello@freeflow.network">hello@freeflow.network</a>
-            </p> <a href="/" className="modal-link">Go to Homepage</a>
+            </p> <Link href="/" className="modal-link">Go to Homepage</Link>
           </div>
         </div>
       )}
@@ -196,7 +197,7 @@ export default function HomePage() {
               <li><a href="#" className="modal-link">Community Forum</a></li>
               <li><a href="#" className="modal-link">API Documentation</a></li>
             </ul>
-            <a href="/" className="modal-link">Go to Homepage</a>
+            <Link href="/" className="modal-link">Go to Homepage</Link>
           </div>
         </div>
       )}
@@ -220,7 +221,7 @@ export default function HomePage() {
       {/* Hero Section */}
       <section className="hero-section dark-gradient-bg">
         <div className="hero-content">
-          <h1>Work Without <span className="highlight">Worry</span>.<br/>Get Paid with <span className="highlight">Trust</span>.</h1>
+          <h1>Work Without <span className="highlight">Worry</span>.<br />Get Paid with <span className="highlight">Trust</span>.</h1>
           <p className="hero-sub">A blockchain-powered platform that enables secure payments and trust for freelance work. No middlemen. No surprises.</p>
           <div className="hero-search-bar">
             <input type="text" placeholder="Search Jobs, Skills, Keywords" className="hero-search-input" />
@@ -391,10 +392,10 @@ export default function HomePage() {
           <div className="footer-logo-group">
             <span className="footer-logo">FreeFlow</span>
             <div className="footer-social">
-              <a href="#" className="footer-social-icon"> <img src="/github.svg" alt="GitHub" /> </a>
-              <a href="#" className="footer-social-icon"> <img src="/linkedin.svg" alt="LinkedIn" /> </a>
-              <a href="#" className="footer-social-icon"> <img src="/facebook.svg" alt="Facebook" /> </a>
-              <a href="#" className="footer-social-icon"> <img src="/x.svg" alt="X" /> </a>
+              <a href="#" className="footer-social-icon"> <Image src="/github.svg" alt="GitHub" width={24} height={24} /> </a>
+              <a href="#" className="footer-social-icon"> <Image src="/linkedin.svg" alt="LinkedIn" width={24} height={24} /> </a>
+              <a href="#" className="footer-social-icon"> <Image src="/facebook.svg" alt="Facebook" width={24} height={24} /> </a>
+              <a href="#" className="footer-social-icon"> <Image src="/x.svg" alt="X" width={24} height={24} /> </a>
             </div>
           </div>
         </div>

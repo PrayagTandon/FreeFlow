@@ -1,5 +1,6 @@
 import '../home.css';
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default function Login() {
   return (
@@ -16,10 +17,10 @@ export default function Login() {
         <div className="register-or">or</div>
         <div className="register-socials">
           <button className="register-social-btn gmail-btn">
-            <img src="/gmail.svg" alt="Gmail" className="register-social-icon" /> Log In with Gmail
+            <Image src="/gmail.svg" alt="Gmail" className="register-social-icon" width={24} height={24} /> Log In with Gmail
           </button>
           <button className="register-social-btn github-btn">
-            <img src="/github.svg" alt="GitHub" className="register-social-icon" /> Log In with GitHub
+            <Image src="/github.svg" alt="GitHub" className="register-social-icon" width={24} height={24} /> Log In with GitHub
           </button>
         </div>
         <div className="register-login-link">
