@@ -15,8 +15,11 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@types/node": "^24.0.12",
+    "@types/react": "^19.1.8",
     "eslint": "^9",
     "eslint-config-next": "15.3.4",
-    "tailwindcss": "^4.1.11"
+    "tailwindcss": "^4.1.11",
+    "typescript": "^5.8.3"
   }
 }

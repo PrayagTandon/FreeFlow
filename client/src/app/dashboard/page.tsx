@@ -1,14 +1,14 @@
 "use client";
-import '../home.css';
-import { useState } from 'react';
+import "../home.css";
+import { useState } from "react";
 
 const trustBreakdown = [
-  { color: '#FFB23F', label: 'Default Trust', percent: 20 },
-  { color: '#5B61F6', label: 'Verified by GitHub', percent: 20 },
-  { color: '#FF5B5B', label: 'Email Verified', percent: 20 },
-  { color: '#2AD4B7', label: 'Phone Verified', percent: 20 },
-  { color: '#A259FF', label: 'Completed Projects', percent: 10 },
-  { color: '#FFD600', label: 'Activity', percent: 10 },
+  { color: "#FFB23F", label: "Default Trust", percent: 20 },
+  { color: "#5B61F6", label: "Verified by GitHub", percent: 20 },
+  { color: "#FF5B5B", label: "Email Verified", percent: 20 },
+  { color: "#2AD4B7", label: "Phone Verified", percent: 20 },
+  { color: "#A259FF", label: "Completed Projects", percent: 10 },
+  { color: "#FFD600", label: "Activity", percent: 10 },
 ];
 
 export default function Dashboard() {
@@ -18,12 +18,12 @@ export default function Dashboard() {
   const currentBids = 2;
   const newPostings = 7;
   const bids = [
-    { project: 'Blockchain Development', status: 'Active', badge: 'Active' },
-    { project: 'Smart Contract Audit', status: 'Pending', badge: 'Pending' },
+    { project: "Blockchain Development", status: "Active", badge: "Active" },
+    { project: "Smart Contract Audit", status: "Pending", badge: "Pending" },
   ];
 
   // Tooltip state for trust chart
-  const [hoveredArc, setHoveredArc] = useState(null);
+  const [hoveredArc, setHoveredArc] = useState<number | null>(null);
 
   // SVG arc math
   const radius = 84;
@@ -41,7 +41,14 @@ export default function Dashboard() {
           <div className="trust-score-left">
             <div className="trust-score-circle trust-score-circle-wide">
               <svg width="200" height="200" viewBox="0 0 200 200">
-                <circle cx={center} cy={center} r={radius} stroke="#eee" strokeWidth={stroke} fill="none" />
+                <circle
+                  cx={center}
+                  cy={center}
+                  r={radius}
+                  stroke="#eee"
+                  strokeWidth={stroke}
+                  fill="none"
+                />
                 {trustBreakdown.map((item, i) => {
                   const arcLen = circumference * (item.percent / 100);
                   const arc = (
@@ -56,7 +63,12 @@ export default function Dashboard() {
                       strokeDasharray={`${arcLen} ${circumference - arcLen}`}
                       strokeDashoffset={-offset}
                       strokeLinecap="round"
-                      style={{ cursor: 'pointer', opacity: hoveredArc === i || hoveredArc === null ? 1 : 0.3, transition: 'opacity 0.2s' }}
+                      style={{
+                        cursor: "pointer",
+                        opacity:
+                          hoveredArc === i || hoveredArc === null ? 1 : 0.3,
+                        transition: "opacity 0.2s",
+                      }}
                       onMouseEnter={() => setHoveredArc(i)}
                       onMouseLeave={() => setHoveredArc(null)}
                     />
@@ -64,16 +76,44 @@ export default function Dashboard() {
                   offset += arcLen;
                   return arc;
                 })}
-                <text x="100" y="98" textAnchor="middle" fontSize="2.1rem" fontWeight="900" fill="#4b2e83">{trustScore}%</text>
-                <text x="100" y="125" textAnchor="middle" fontSize="1.05rem" fontWeight="700" fill="#5B61F6">Trust Score</text>
+                <text
+                  x="100"
+                  y="98"
+                  textAnchor="middle"
+                  fontSize="2.1rem"
+                  fontWeight="900"
+                  fill="#4b2e83"
+                >
+                  {trustScore}%
+                </text>
+                <text
+                  x="100"
+                  y="125"
+                  textAnchor="middle"
+                  fontSize="1.05rem"
+                  fontWeight="700"
+                  fill="#5B61F6"
+                >
+                  Trust Score
+                </text>
               </svg>
             </div>
           </div>
           <div className="trust-score-right trust-score-right-wide">
             <div className="trust-score-legend">
               {trustBreakdown.map((item, i) => (
-                <div className="trust-legend-row" key={item.label} style={{ fontWeight: hoveredArc === i ? 700 : 500 }}>
-                  <span className="trust-legend-dot" style={{ background: item.color, border: hoveredArc === i ? '2px solid #4b2e83' : 'none' }}></span>
+                <div
+                  className="trust-legend-row"
+                  key={item.label}
+                  style={{ fontWeight: hoveredArc === i ? 700 : 500 }}
+                >
+                  <span
+                    className="trust-legend-dot"
+                    style={{
+                      background: item.color,
+                      border: hoveredArc === i ? "2px solid #4b2e83" : "none",
+                    }}
+                  ></span>
                   <span className="trust-legend-label">{item.label}</span>
                 </div>
               ))}
@@ -93,7 +133,9 @@ export default function Dashboard() {
             <div className="stat-desc">Current Bids</div>
           </div>
           <div className="dashboard-stat-card">
-            <div className="stat-title small-title">Postings added in the last 24 hours</div>
+            <div className="stat-title small-title">
+              Postings added in the last 24 hours
+            </div>
             <div className="stat-value">{newPostings}</div>
             <div className="stat-desc">New Postings</div>
           </div>
@@ -115,7 +157,13 @@ export default function Dashboard() {
                   <td>{bid.project}</td>
                   <td>{bid.status}</td>
                   <td>
-                    <span className={`bid-badge ${bid.badge === 'Active' ? 'active' : 'pending'}`}>{bid.badge}</span>
+                    <span
+                      className={`bid-badge ${
+                        bid.badge === "Active" ? "active" : "pending"
+                      }`}
+                    >
+                      {bid.badge}
+                    </span>
                   </td>
                 </tr>
               ))}
@@ -125,4 +173,4 @@ export default function Dashboard() {
       </div>
     </div>
   );
-} 
+}
