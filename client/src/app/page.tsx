@@ -1,5 +1,5 @@
 "use client";
-import "./home.css";
+import "./globals.css";
 import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -113,23 +113,25 @@ export default function HomePage() {
   const steps = howMode === "Client" ? howItWorksClient : howItWorksFreelancer;
 
   return (
-    <div className="homepage-container">
+    <div className="min-h-screen bg-gray-50">
       {/* How It Works Modal */}
       {howModalOpen && (
-        <div className="modal-overlay">
-          <div className="modal-content">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto relative">
             <button
-              className="modal-close"
+              className="absolute top-4 right-4 text-2xl font-bold text-gray-500 hover:text-gray-700"
               onClick={() => setHowModalOpen(false)}
             >
               &times;
             </button>
-            <h2>How It Works</h2>
-            <p style={{ marginBottom: "1.5rem" }}>
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">
+              How It Works
+            </h2>
+            <p className="text-gray-600 mb-6">
               <strong>FreeFlow</strong> connects clients and freelancers using
               blockchain-powered smart contracts. Here&apos;s how it works:
             </p>
-            <ol style={{ marginBottom: "1.5rem", paddingLeft: "1.2rem" }}>
+            <ol className="list-decimal list-inside space-y-2 mb-6 text-gray-700">
               <li>
                 <strong>Post or Find Projects:</strong> Clients post jobs,
                 freelancers browse and apply.
@@ -151,281 +153,327 @@ export default function HomePage() {
                 scores for future work.
               </li>
             </ol>
-            <Link href="/" className="modal-link">
+            <Link
+              href="/"
+              className="inline-block bg-primary-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-primary-600 transition-colors"
+            >
               Go to Homepage
             </Link>
           </div>
         </div>
       )}
+
       {/* About Us Modal */}
       {aboutOpen && (
-        <div className="modal-overlay">
-          <div className="modal-content">
-            <button className="modal-close" onClick={() => setAboutOpen(false)}>
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto relative">
+            <button
+              className="absolute top-4 right-4 text-2xl font-bold text-gray-500 hover:text-gray-700"
+              onClick={() => setAboutOpen(false)}
+            >
               &times;
             </button>
-            <h2>About Us</h2>
-            <p style={{ marginBottom: "1.5rem" }}>
-              <strong>FreeFlow</strong> is reimagining the future of freelancing
-              by putting control, trust, and fairness back into the hands of
-              freelancers and clients.
-            </p>
-
-            <p style={{ marginBottom: "1.5rem" }}>
-              We believe that skilled professionals and employers deserve a
-              platform where they can work together freely without high fees,
-              restrictive rules, or centralized control. That&apos;s why we
-              built <strong>FreeFlow</strong> as a{" "}
-              <em>decentralized freelancing platform</em>, powered by blockchain
-              technology.
-            </p>
-
-            <p style={{ marginBottom: "1.5rem" }}>
-              Instead of relying on middlemen, FreeFlow uses smart contracts to
-              manage everything from job postings and milestone payments to
-              dispute resolution. Freelancers get paid on time. Clients only
-              release funds when work is delivered. And disputes are resolved
-              transparently by the community or through decentralized courts.
-            </p>
-
-            <p style={{ marginBottom: "1.5rem" }}>
-              To help users build trust, we&apos;ve developed a{" "}
-              <strong>Trust Score System</strong>. Freelancers and employers are
-              rated based on job success, reviews, dispute history, and identity
-              verification like GitHub, portfolio, or company email.
-            </p>
-
-            <p style={{ marginBottom: "1.5rem" }}>
-              What sets us apart is our{" "}
-              <strong>community-first approach</strong>. FreeFlow is governed by
-              its users—freelancers and clients who vote on how the platform
-              grows, evolves, and operates.
-            </p>
-
-            <p style={{ marginBottom: "2rem" }}>
-              <em>
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">About Us</h2>
+            <div className="space-y-4 text-gray-700">
+              <p>
+                <strong>FreeFlow</strong> is reimagining the future of
+                freelancing by putting control, trust, and fairness back into
+                the hands of freelancers and clients.
+              </p>
+              <p>
+                We believe that skilled professionals and employers deserve a
+                platform where they can work together freely without high fees,
+                restrictive rules, or centralized control. That&apos;s why we
+                built <strong>FreeFlow</strong> as a{" "}
+                <em>decentralized freelancing platform</em>, powered by
+                blockchain technology.
+              </p>
+              <p>
+                Instead of relying on middlemen, FreeFlow uses smart contracts
+                to manage everything from job postings and milestone payments to
+                dispute resolution. Freelancers get paid on time. Clients only
+                release funds when work is delivered. And disputes are resolved
+                transparently by the community or through decentralized courts.
+              </p>
+              <p>
+                To help users build trust, we&apos;ve developed a{" "}
+                <strong>Trust Score System</strong>. Freelancers and employers
+                are rated based on job success, reviews, dispute history, and
+                identity verification like GitHub, portfolio, or company email.
+              </p>
+              <p>
+                What sets us apart is our{" "}
+                <strong>community-first approach</strong>. FreeFlow is governed
+                by its users—freelancers and clients who vote on how the
+                platform grows, evolves, and operates.
+              </p>
+              <p className="italic">
                 We&apos;re not just building a platform. We&apos;re building a
                 fairer digital economy.
-              </em>
-              <br />
-              <strong>Welcome to FreeFlow.</strong> Work without barriers. Trust
-              without borders.
-            </p>
-
-            <Link href="/" className="modal-link">
+                <br />
+                <strong>Welcome to FreeFlow.</strong> Work without barriers.
+                Trust without borders.
+              </p>
+            </div>
+            <Link
+              href="/"
+              className="inline-block bg-primary-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-primary-600 transition-colors mt-6"
+            >
               Go to Homepage
             </Link>
           </div>
         </div>
       )}
+
       {/* Contact Us Modal */}
       {contactOpen && (
-        <div className="modal-overlay">
-          <div className="modal-content">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto relative">
             <button
-              className="modal-close"
+              className="absolute top-4 right-4 text-2xl font-bold text-gray-500 hover:text-gray-700"
               onClick={() => setContactOpen(false)}
             >
               &times;
             </button>
-            <h2>Contact Us</h2>
-            <p style={{ marginBottom: "1.5rem" }}>
-              At <strong>FreeFlow</strong>, we&apos;re proud to be a truly
-              global team. With core developers and contributors based in{" "}
-              <strong>India</strong>, <strong>Dubai</strong>, and{" "}
-              <strong>Toronto</strong>, we&apos;re building a decentralized
-              freelancing platform that supports talent across borders—because
-              our mission is global by design.
-            </p>
-            <p style={{ marginBottom: "2rem" }}>
-              Whether you have a question, a partnership idea, or just want to
-              connect, feel free to reach out to our regional teams below.
-            </p>
-            <div style={{ marginBottom: "2rem" }}>
-              <h4>📍 India</h4>
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">
+              Contact Us
+            </h2>
+            <div className="space-y-4 text-gray-700">
               <p>
-                Email:{" "}
-                <a href="mailto:india@freeflow.network">
-                  india@freeflow.network
+                At <strong>FreeFlow</strong>, we&apos;re proud to be a truly
+                global team. With core developers and contributors based in{" "}
+                <strong>India</strong>, <strong>Dubai</strong>, and{" "}
+                <strong>Toronto</strong>, we&apos;re building a decentralized
+                freelancing platform that supports talent across borders—because
+                our mission is global by design.
+              </p>
+              <p>
+                Whether you have a question, a partnership idea, or just want to
+                connect, feel free to reach out to our regional teams below.
+              </p>
+
+              <div className="space-y-4">
+                <div>
+                  <h4 className="font-semibold text-gray-900">📍 India</h4>
+                  <p>
+                    Email:{" "}
+                    <a
+                      href="mailto:india@freeflow.network"
+                      className="text-primary-600 hover:text-primary-700"
+                    >
+                      india@freeflow.network
+                    </a>
+                    <br />
+                    Location: Mumbai{" "}
+                  </p>
+                </div>
+                <div>
+                  <h4 className="font-semibold text-gray-900">
+                    📍 United Arab Emirates
+                  </h4>
+                  <p>
+                    Email:{" "}
+                    <a
+                      href="mailto:dubai@freeflow.network"
+                      className="text-primary-600 hover:text-primary-700"
+                    >
+                      dubai@freeflow.network
+                    </a>
+                    <br />
+                    Location: Dubai
+                  </p>
+                </div>
+                <div>
+                  <h4 className="font-semibold text-gray-900">📍 Canada</h4>
+                  <p>
+                    Email:{" "}
+                    <a
+                      href="mailto:toronto@freeflow.network"
+                      className="text-primary-600 hover:text-primary-700"
+                    >
+                      toronto@freeflow.network
+                    </a>
+                    <br />
+                    Location: Toronto
+                  </p>
+                </div>
+              </div>
+
+              <p>
+                For general inquiries, please email us at:{" "}
+                <a
+                  href="mailto:hello@freeflow.network"
+                  className="text-primary-600 hover:text-primary-700"
+                >
+                  hello@freeflow.network
                 </a>
-                <br />
-                Location: Mumbai{" "}
               </p>
             </div>
-            <div style={{ marginBottom: "2rem" }}>
-              <h4>📍 United Arab Emirates</h4>
-              <p>
-                Email:{" "}
-                <a href="mailto:dubai@freeflow.network">
-                  dubai@freeflow.network
-                </a>
-                <br />
-                Location: Dubai
-              </p>
-            </div>
-            <div style={{ marginBottom: "2rem" }}>
-              <h4>📍 Canada</h4>
-              <p>
-                Email:{" "}
-                <a href="mailto:toronto@freeflow.network">
-                  toronto@freeflow.network
-                </a>
-                <br />
-                Location: Toronto
-              </p>
-            </div>
-            <p style={{ marginBottom: "2rem" }}>
-              For general inquiries, please email us at:{" "}
-              <a href="mailto:hello@freeflow.network">hello@freeflow.network</a>
-            </p>{" "}
-            <Link href="/" className="modal-link">
+            <Link
+              href="/"
+              className="inline-block bg-primary-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-primary-600 transition-colors mt-6"
+            >
               Go to Homepage
             </Link>
           </div>
         </div>
       )}
+
       {/* Resources Modal */}
       {resourcesOpen && (
-        <div className="modal-overlay">
-          <div className="modal-content">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto relative">
             <button
-              className="modal-close"
+              className="absolute top-4 right-4 text-2xl font-bold text-gray-500 hover:text-gray-700"
               onClick={() => setResourcesOpen(false)}
             >
               &times;
             </button>
-            <h2>Resources</h2>
-            <p style={{ marginBottom: "1.5rem" }}>
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">Resources</h2>
+            <p className="text-gray-700 mb-6">
               Here are some helpful resources for getting started and making the
               most of FreeFlow:
             </p>
-            <ul style={{ marginBottom: "2rem", paddingLeft: "1.2rem" }}>
+            <ul className="space-y-2 mb-6">
               <li>
-                <a href="#" className="modal-link">
+                <a
+                  href="#"
+                  className="text-primary-600 hover:text-primary-700 font-medium"
+                >
                   Getting Started Guide
                 </a>
               </li>
               <li>
-                <a href="#" className="modal-link">
+                <a
+                  href="#"
+                  className="text-primary-600 hover:text-primary-700 font-medium"
+                >
                   Smart Contract Security
                 </a>
               </li>
               <li>
-                <a href="#" className="modal-link">
+                <a
+                  href="#"
+                  className="text-primary-600 hover:text-primary-700 font-medium"
+                >
                   Community Forum
                 </a>
               </li>
               <li>
-                <a href="#" className="modal-link">
+                <a
+                  href="#"
+                  className="text-primary-600 hover:text-primary-700 font-medium"
+                >
                   API Documentation
                 </a>
               </li>
             </ul>
-            <Link href="/" className="modal-link">
+            <Link
+              href="/"
+              className="inline-block bg-primary-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-primary-600 transition-colors"
+            >
               Go to Homepage
             </Link>
           </div>
         </div>
       )}
+
       {/* Navbar */}
-      <nav className="navbar gradient-bg">
-        <div className="navbar-left">
-          <span className="logo">Logo</span>
-          <a
-            href="#"
-            className="nav-link"
-            onClick={(e) => {
-              e.preventDefault();
-              setHowModalOpen(true);
-            }}
-          >
-            How It Works ▾
-          </a>
-          <a href="#" className="nav-link" onClick={(e) => e.preventDefault()}>
-            Search ▾
-          </a>
-          <a
-            href="#"
-            className="nav-link"
-            onClick={(e) => {
-              e.preventDefault();
-              setAboutOpen(true);
-            }}
-          >
-            About Us
-          </a>
-          <a
-            href="#"
-            className="nav-link"
-            onClick={(e) => {
-              e.preventDefault();
-              setContactOpen(true);
-            }}
-          >
-            Contact Us
-          </a>
-          <a
-            href="#"
-            className="nav-link"
-            onClick={(e) => {
-              e.preventDefault();
-              setResourcesOpen(true);
-            }}
-          >
-            Resources
-          </a>
-          <a href="#" className="nav-link">
-            Pricing
-          </a>
-        </div>
-        <div className="navbar-right">
-          <Link href="/login" className="login-btn">
-            Log In
-          </Link>
-          <Link href="/register" className="register-btn">
-            Register
-          </Link>
+      <nav className="bg-gradient-to-r from-secondary-900 to-primary-500 text-white px-8 py-4">
+        <div className="max-w-7xl mx-auto flex justify-between items-center">
+          <div className="flex items-center space-x-6">
+            <span className="text-xl font-bold">Logo</span>
+            <button
+              className="text-white hover:text-primary-200 transition-colors font-medium"
+              onClick={() => setHowModalOpen(true)}
+            >
+              How It Works ▾
+            </button>
+            <button className="text-white hover:text-primary-200 transition-colors font-medium">
+              Search ▾
+            </button>
+            <button
+              className="text-white hover:text-primary-200 transition-colors font-medium"
+              onClick={() => setAboutOpen(true)}
+            >
+              About Us
+            </button>
+            <button
+              className="text-white hover:text-primary-200 transition-colors font-medium"
+              onClick={() => setContactOpen(true)}
+            >
+              Contact Us
+            </button>
+            <button
+              className="text-white hover:text-primary-200 transition-colors font-medium"
+              onClick={() => setResourcesOpen(true)}
+            >
+              Resources
+            </button>
+            <button className="text-white hover:text-primary-200 transition-colors font-medium">
+              Pricing
+            </button>
+          </div>
+          <div className="flex items-center space-x-4">
+            <Link
+              href="/login"
+              className="bg-white text-secondary-900 px-6 py-2 rounded-full font-semibold hover:bg-primary-200 transition-colors"
+            >
+              Log In
+            </Link>
+            <Link
+              href="/register"
+              className="bg-primary-500 text-white px-6 py-2 rounded-full font-semibold hover:bg-primary-600 transition-colors"
+            >
+              Register
+            </Link>
+          </div>
         </div>
       </nav>
 
       {/* Hero Section */}
-      <section className="hero-section dark-gradient-bg">
-        <div className="hero-content">
-          <h1>
-            Work Without <span className="highlight">Worry</span>.<br />
-            Get Paid with <span className="highlight">Trust</span>.
+      <section className="bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900 relative overflow-hidden rounded-2xl mx-8 my-8 shadow-2xl">
+        <div className="relative z-10 w-full px-8 py-12 flex flex-col items-start">
+          <h1 className="text-4xl md:text-5xl font-bold text-white mb-4 leading-tight">
+            Work Without <span className="text-primary-400">Worry</span>.<br />
+            Get Paid with <span className="text-primary-400">Trust</span>.
           </h1>
-          <p className="hero-sub">
+          <p className="text-xl text-white/90 mb-8 max-w-2xl">
             A blockchain-powered platform that enables secure payments and trust
             for freelance work. No middlemen. No surprises.
           </p>
-          <div className="hero-search-bar">
+          <div className="flex flex-col sm:flex-row gap-3 bg-white rounded-2xl p-2 shadow-lg">
             <input
               type="text"
               placeholder="Search Jobs, Skills, Keywords"
-              className="hero-search-input"
+              className="flex-1 px-4 py-3 border-none outline-none rounded-xl text-gray-900"
             />
-            <select className="hero-search-select">
+            <select className="px-4 py-3 bg-gray-100 border-none outline-none rounded-xl text-gray-900">
               <option>Client</option>
               <option>Freelancer</option>
             </select>
-            <button className="hero-search-btn">Search</button>
+            <button className="bg-primary-500 text-white px-6 py-3 rounded-xl font-semibold hover:bg-primary-600 transition-colors">
+              Search
+            </button>
           </div>
         </div>
       </section>
 
       {/* Professions Section */}
-      <section className="professions-section">
-        <h2>
-          Explore Different <span className="highlight">Professions</span>, Get
-          Paid With <span className="highlight">Trust</span>
+      <section className="bg-yellow-50 mx-8 my-16 rounded-2xl shadow-lg p-8 text-center">
+        <h2 className="text-2xl font-bold text-gray-900 mb-8">
+          Explore Different{" "}
+          <span className="text-primary-600">Professions</span>, Get Paid With{" "}
+          <span className="text-primary-600">Trust</span>
         </h2>
-        <div className="professions-grid">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-8">
           {professionData.map((prof, idx) => (
             <div
               key={prof.name}
-              className={`profession-card${
-                selectedProfession === idx ? " prof-card-highlight" : ""
+              className={`bg-white rounded-2xl shadow-md p-6 flex flex-col items-center cursor-pointer transition-all duration-200 hover:shadow-lg hover:border-2 hover:border-primary-300 ${
+                selectedProfession === idx
+                  ? "bg-primary-500 text-white shadow-lg border-2 border-primary-500"
+                  : "text-gray-700"
               }`}
               onClick={() => {
                 setSelectedProfession(idx);
@@ -440,43 +488,43 @@ export default function HomePage() {
               role="button"
               aria-pressed={selectedProfession === idx}
             >
-              <div className="prof-icon" aria-hidden="true">
+              <div className="text-4xl mb-3" aria-hidden="true">
                 {prof.icon}
               </div>
-              <span>{prof.name}</span>
+              <span className="font-semibold text-center">{prof.name}</span>
             </div>
           ))}
         </div>
-        <div
-          className={`profession-desc-expand${
-            selectedProfession !== null ? " show" : ""
-          }`}
-        >
-          {selectedProfession !== null && (
-            <div className="profession-desc-content">
-              <span className="prof-desc-icon">
+        {selectedProfession !== null && (
+          <div className="bg-white rounded-2xl shadow-lg p-6 max-w-2xl mx-auto">
+            <div className="flex items-center gap-4 mb-4">
+              <span className="text-3xl">
                 {professionData[selectedProfession].icon}
               </span>
-              <span className="prof-desc-title">
+              <span className="text-xl font-bold text-gray-900">
                 {professionData[selectedProfession].name}
               </span>
-              <p className="prof-desc-text">
-                {professionData[selectedProfession].desc}
-              </p>
             </div>
-          )}
-        </div>
+            <p className="text-gray-700 text-left">
+              {professionData[selectedProfession].desc}
+            </p>
+          </div>
+        )}
       </section>
 
       {/* How It Works Section */}
-      <section className="how-it-works-section">
-        <div className="how-header">
-          <h2>
-            How It Works <span className="how-arrow">&gt;</span>
+      <section className="mx-8 my-16">
+        <div className="flex flex-col md:flex-row justify-between items-center mb-8">
+          <h2 className="text-2xl font-bold text-gray-900 mb-4 md:mb-0">
+            How It Works <span className="text-primary-500">&gt;</span>
           </h2>
-          <div className="how-toggle">
+          <div className="flex bg-gray-100 rounded-lg p-1">
             <button
-              className={`how-btn${howMode === "Client" ? " active" : ""}`}
+              className={`px-6 py-2 rounded-md font-medium transition-colors ${
+                howMode === "Client"
+                  ? "bg-white text-primary-600 shadow-sm"
+                  : "text-gray-600 hover:text-gray-900"
+              }`}
               onClick={() => {
                 setHowMode("Client");
                 setSelectedStep(1);
@@ -485,7 +533,11 @@ export default function HomePage() {
               Client
             </button>
             <button
-              className={`how-btn${howMode === "Freelancer" ? " active" : ""}`}
+              className={`px-6 py-2 rounded-md font-medium transition-colors ${
+                howMode === "Freelancer"
+                  ? "bg-white text-primary-600 shadow-sm"
+                  : "text-gray-600 hover:text-gray-900"
+              }`}
               onClick={() => {
                 setHowMode("Freelancer");
                 setSelectedStep(1);
@@ -495,12 +547,13 @@ export default function HomePage() {
             </button>
           </div>
         </div>
-        <div className="how-steps icons-only">
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           {steps.map((step, idx) => (
             <div
               key={step.title}
-              className={`how-step-card icon-only${
-                selectedStep === idx ? " how-step-center" : ""
+              className={`bg-white rounded-2xl shadow-md p-6 text-center cursor-pointer transition-all duration-200 hover:shadow-lg ${
+                selectedStep === idx ? "ring-2 ring-primary-500 shadow-lg" : ""
               }`}
               onMouseEnter={() => setSelectedStep(idx)}
               onClick={() => setSelectedStep(idx)}
@@ -508,82 +561,91 @@ export default function HomePage() {
               role="button"
               aria-pressed={selectedStep === idx}
             >
-              <div className="how-step-icon" aria-hidden="true">
+              <div className="text-4xl mb-4" aria-hidden="true">
                 {step.icon}
               </div>
-              <div className="how-step-title">{step.title}</div>
-              {/* Only show Learn More on selected */}
+              <div className="font-semibold text-gray-900 mb-3">
+                {step.title}
+              </div>
               {selectedStep === idx && (
-                <button className="how-learn-btn">Learn More</button>
+                <button className="bg-primary-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-primary-600 transition-colors">
+                  Learn More
+                </button>
               )}
             </div>
           ))}
         </div>
-        {/* Expanded details for selected step */}
-        <div
-          className={`how-step-desc-expand${
-            selectedStep !== null ? " show" : ""
-          }`}
-        >
-          {selectedStep !== null && (
-            <div className="how-step-desc-content">
-              <span className="how-step-desc-icon">
-                {steps[selectedStep].icon}
-              </span>
-              <span className="how-step-desc-title">
+
+        {selectedStep !== null && (
+          <div className="bg-white rounded-2xl shadow-lg p-6 max-w-2xl mx-auto">
+            <div className="flex items-center gap-4 mb-4">
+              <span className="text-3xl">{steps[selectedStep].icon}</span>
+              <span className="text-xl font-bold text-gray-900">
                 {steps[selectedStep].title}
               </span>
-              <p className="how-step-desc-text">{steps[selectedStep].desc}</p>
             </div>
-          )}
-        </div>
+            <p className="text-gray-700 text-left">
+              {steps[selectedStep].desc}
+            </p>
+          </div>
+        )}
       </section>
 
       {/* Features Section */}
-      <section className="features-section improved-features-gradient">
-        <div className="features-header">
-          <span className="features-why">WHY CHOOSE US</span>
-          <h2>
-            Designed For <span className="highlight">Trust</span>. Built For The
-            Future Of <span className="highlight">Work</span>.
+      <section className="bg-gradient-to-br from-purple-50 to-blue-50 mx-8 my-16 rounded-2xl p-8">
+        <div className="text-center mb-12">
+          <span className="text-sm font-semibold text-primary-600 uppercase tracking-wide">
+            WHY CHOOSE US
+          </span>
+          <h2 className="text-3xl font-bold text-gray-900 mt-2">
+            Designed For <span className="text-primary-600">Trust</span>. Built
+            For The Future Of <span className="text-primary-600">Work</span>.
           </h2>
         </div>
-        <div className="features-list">
-          <div className="feature-row">
-            <div className="feature-icon feature-emoji">🤝</div>
-            <div className="feature-text">
-              <h3>Trustless Smart Escrow</h3>
-              <p>
+        <div className="space-y-8">
+          <div className="flex flex-col md:flex-row items-start gap-6">
+            <div className="text-4xl flex-shrink-0">🤝</div>
+            <div className="flex-1">
+              <h3 className="text-xl font-bold text-gray-900 mb-2">
+                Trustless Smart Escrow
+              </h3>
+              <p className="text-gray-700">
                 Payments are held securely in escrow and released only when both
                 parties are satisfied. No middlemen, no worries.
               </p>
             </div>
           </div>
-          <div className="feature-row">
-            <div className="feature-icon feature-emoji">💳</div>
-            <div className="feature-text">
-              <h3>Crypto-Native Payments</h3>
-              <p>
+          <div className="flex flex-col md:flex-row items-start gap-6">
+            <div className="text-4xl flex-shrink-0">💳</div>
+            <div className="flex-1">
+              <h3 className="text-xl font-bold text-gray-900 mb-2">
+                Crypto-Native Payments
+              </h3>
+              <p className="text-gray-700">
                 Get paid instantly and globally with crypto. No waiting, no
                 borders, no hidden fees.
               </p>
             </div>
           </div>
-          <div className="feature-row">
-            <div className="feature-icon feature-emoji">🌟</div>
-            <div className="feature-text">
-              <h3>On-Chain Reputation</h3>
-              <p>
+          <div className="flex flex-col md:flex-row items-start gap-6">
+            <div className="text-4xl flex-shrink-0">🌟</div>
+            <div className="flex-1">
+              <h3 className="text-xl font-bold text-gray-900 mb-2">
+                On-Chain Reputation
+              </h3>
+              <p className="text-gray-700">
                 Your work history and reviews are stored on-chain, making your
                 reputation portable and verifiable anywhere.
               </p>
             </div>
           </div>
-          <div className="feature-row">
-            <div className="feature-icon feature-emoji">📜</div>
-            <div className="feature-text">
-              <h3>Verifiable Work History</h3>
-              <p>
+          <div className="flex flex-col md:flex-row items-start gap-6">
+            <div className="text-4xl flex-shrink-0">📜</div>
+            <div className="flex-1">
+              <h3 className="text-xl font-bold text-gray-900 mb-2">
+                Verifiable Work History
+              </h3>
+              <p className="text-gray-700">
                 Every project and review is recorded, giving you a transparent
                 and trustworthy work portfolio.
               </p>
@@ -593,14 +655,16 @@ export default function HomePage() {
       </section>
 
       {/* FAQ Section */}
-      <section className="faq-section improved-faq-gradient">
-        <h2 className="faq-title">FAQs</h2>
-        <div className="faq-list">
+      <section className="bg-gradient-to-br from-gray-50 to-blue-50 mx-8 my-16 rounded-2xl p-8">
+        <h2 className="text-3xl font-bold text-gray-900 text-center mb-8">
+          FAQs
+        </h2>
+        <div className="max-w-3xl mx-auto space-y-4">
           {faqData.map((faq, idx) => (
             <details
               key={faq.q}
-              className={`faq-item improved-faq${
-                faqOpen.includes(idx) ? " open" : ""
+              className={`bg-white rounded-xl shadow-md overflow-hidden ${
+                faqOpen.includes(idx) ? "ring-2 ring-primary-500" : ""
               }`}
               open={faqOpen.includes(idx)}
               onClick={(e) => {
@@ -612,117 +676,127 @@ export default function HomePage() {
                 );
               }}
             >
-              <summary>{faq.q}</summary>
-              <p>{faq.a}</p>
+              <summary className="px-6 py-4 cursor-pointer font-semibold text-gray-900 hover:bg-gray-50 transition-colors">
+                {faq.q}
+              </summary>
+              <div className="px-6 pb-4 text-gray-700">
+                <p>{faq.a}</p>
+              </div>
             </details>
           ))}
         </div>
       </section>
 
       {/* CTA Section */}
-      <section className="cta-section gradient-bg">
-        <h2 className="cta-title">
+      <section className="bg-gradient-to-r from-secondary-900 to-primary-500 mx-8 my-16 rounded-2xl p-12 text-center">
+        <h2 className="text-3xl font-bold text-white mb-6">
           Find The Right Freelancer For Your Project
         </h2>
-        <button className="cta-btn cta-btn-large">Explore Freelancers</button>
+        <button className="bg-white text-secondary-900 px-8 py-4 rounded-xl font-bold text-lg hover:bg-primary-200 transition-colors">
+          Explore Freelancers
+        </button>
       </section>
 
       {/* Footer */}
-      <footer className="footer improved-footer-gradient">
-        <div className="footer-main">
-          <div className="footer-links-group">
-            <div className="footer-links-title">For Users</div>
-            <a href="#">For Clients</a>
-            <a
-              href="#"
-              onClick={(e) => {
-                e.preventDefault();
-                router.push("/freelancer-home");
-              }}
-            >
-              For Freelancers
-            </a>
-            <a
-              href="#"
-              onClick={(e) => {
-                e.preventDefault();
-                router.push("/dashboard");
-              }}
-            >
-              Help
-            </a>
-          </div>
-          <div className="footer-links-group">
-            <div className="footer-links-title">Company</div>
-            <a
-              href="#"
-              onClick={(e) => {
-                e.preventDefault();
-                setAboutOpen(true);
-              }}
-            >
-              About Us
-            </a>
-            <a
-              href="#"
-              onClick={(e) => {
-                e.preventDefault();
-                setResourcesOpen(true);
-              }}
-            >
-              Resources
-            </a>
-            <a
-              href="#"
-              onClick={(e) => {
-                e.preventDefault();
-                setContactOpen(true);
-              }}
-            >
-              Contact Us
-            </a>
-          </div>
-          <div className="footer-logo-group">
-            <span className="footer-logo">FreeFlow</span>
-            <div className="footer-social">
-              <a href="#" className="footer-social-icon">
-                {" "}
-                <Image
-                  src="/github.svg"
-                  alt="GitHub"
-                  width={24}
-                  height={24}
-                />{" "}
-              </a>
-              <a href="#" className="footer-social-icon">
-                {" "}
-                <Image
-                  src="/linkedin.svg"
-                  alt="LinkedIn"
-                  width={24}
-                  height={24}
-                />{" "}
-              </a>
-              <a href="#" className="footer-social-icon">
-                {" "}
-                <Image
-                  src="/facebook.svg"
-                  alt="Facebook"
-                  width={24}
-                  height={24}
-                />{" "}
-              </a>
-              <a href="#" className="footer-social-icon">
-                {" "}
-                <Image src="/x.svg" alt="X" width={24} height={24} />{" "}
-              </a>
+      <footer className="bg-gradient-to-br from-gray-900 to-gray-800 text-white">
+        <div className="max-w-7xl mx-auto px-8 py-12">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div>
+              <div className="font-semibold text-lg mb-4">For Users</div>
+              <div className="space-y-2">
+                <a
+                  href="#"
+                  className="block text-gray-300 hover:text-white transition-colors"
+                >
+                  For Clients
+                </a>
+                <button
+                  onClick={() => router.push("/freelancer-home")}
+                  className="block text-gray-300 hover:text-white transition-colors text-left"
+                >
+                  For Freelancers
+                </button>
+                <button
+                  onClick={() => router.push("/dashboard")}
+                  className="block text-gray-300 hover:text-white transition-colors text-left"
+                >
+                  Help
+                </button>
+              </div>
+            </div>
+            <div>
+              <div className="font-semibold text-lg mb-4">Company</div>
+              <div className="space-y-2">
+                <button
+                  onClick={() => setAboutOpen(true)}
+                  className="block text-gray-300 hover:text-white transition-colors text-left"
+                >
+                  About Us
+                </button>
+                <button
+                  onClick={() => setResourcesOpen(true)}
+                  className="block text-gray-300 hover:text-white transition-colors text-left"
+                >
+                  Resources
+                </button>
+                <button
+                  onClick={() => setContactOpen(true)}
+                  className="block text-gray-300 hover:text-white transition-colors text-left"
+                >
+                  Contact Us
+                </button>
+              </div>
+            </div>
+            <div>
+              <div className="font-bold text-xl mb-4">FreeFlow</div>
+              <div className="flex space-x-4">
+                <a
+                  href="#"
+                  className="text-gray-300 hover:text-white transition-colors"
+                >
+                  <Image
+                    src="/github.svg"
+                    alt="GitHub"
+                    width={24}
+                    height={24}
+                  />
+                </a>
+                <a
+                  href="#"
+                  className="text-gray-300 hover:text-white transition-colors"
+                >
+                  <Image
+                    src="/linkedin.svg"
+                    alt="LinkedIn"
+                    width={24}
+                    height={24}
+                  />
+                </a>
+                <a
+                  href="#"
+                  className="text-gray-300 hover:text-white transition-colors"
+                >
+                  <Image
+                    src="/facebook.svg"
+                    alt="Facebook"
+                    width={24}
+                    height={24}
+                  />
+                </a>
+                <a
+                  href="#"
+                  className="text-gray-300 hover:text-white transition-colors"
+                >
+                  <Image src="/x.svg" alt="X" width={24} height={24} />
+                </a>
+              </div>
             </div>
           </div>
         </div>
-        <div className="footer-bottom">
-          <span>
+        <div className="border-t border-gray-700 py-6">
+          <div className="max-w-7xl mx-auto px-8 text-center text-gray-400">
             © {new Date().getFullYear()} FreeFlow. All rights reserved.
-          </span>
+          </div>
         </div>
       </footer>
     </div>

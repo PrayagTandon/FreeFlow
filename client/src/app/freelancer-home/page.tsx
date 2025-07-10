@@ -1,31 +1,32 @@
 "use client";
-import '../home.css';
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import Image from 'next/image';
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 const trustBreakdown = [
-  { color: '#FFB23F', label: 'Default Trust', percent: 20 },
-  { color: '#5B61F6', label: 'Verified by GitHub', percent: 20 },
-  { color: '#FF5B5B', label: 'Email Verified', percent: 20 },
-  { color: '#2AD4B7', label: 'Phone Verified', percent: 20 },
-  { color: '#A259FF', label: 'Completed Projects', percent: 10 },
-  { color: '#FFD600', label: 'Activity', percent: 10 },
+  { color: "#FFB23F", label: "Default Trust", percent: 20 },
+  { color: "#5B61F6", label: "Verified by GitHub", percent: 20 },
+  { color: "#FF5B5B", label: "Email Verified", percent: 20 },
+  { color: "#2AD4B7", label: "Phone Verified", percent: 20 },
+  { color: "#A259FF", label: "Completed Projects", percent: 10 },
+  { color: "#FFD600", label: "Activity", percent: 10 },
 ];
 
 const jobs = [
   {
-    title: 'Website Development',
-    description: 'Build a modern, responsive website for a tech startup. Requires experience with React, Next.js, and UI/UX best practices. Deliver a landing page, blog, and contact form integrated with backend APIs.',
-    tags: ['Web', 'React', 'Next.js', 'UI/UX', 'API'],
+    title: "Website Development",
+    description:
+      "Build a modern, responsive website for a tech startup. Requires experience with React, Next.js, and UI/UX best practices. Deliver a landing page, blog, and contact form integrated with backend APIs.",
+    tags: ["Web", "React", "Next.js", "UI/UX", "API"],
     proposals: 3,
     clientTrust: 92,
     photos: [1, 2, 3, 4],
   },
   {
-    title: 'DeFi Smart Contract Development',
-    description: 'Develop and audit a DeFi smart contract for a new protocol. Must have experience with Solidity, security best practices, and deploying to Ethereum testnets. Prior DeFi project experience preferred.',
-    tags: ['DeFi', 'Solidity', 'Smart Contracts', 'Audit', 'Ethereum'],
+    title: "DeFi Smart Contract Development",
+    description:
+      "Develop and audit a DeFi smart contract for a new protocol. Must have experience with Solidity, security best practices, and deploying to Ethereum testnets. Prior DeFi project experience preferred.",
+    tags: ["DeFi", "Solidity", "Smart Contracts", "Audit", "Ethereum"],
     proposals: 5,
     clientTrust: 88,
     photos: [1, 2, 3, 4],
@@ -37,7 +38,7 @@ export default function FreelancerHome() {
   const trustScore = 100;
   const totalProjects = 5;
   const currentBids = 2;
-  const [hoveredArc, setHoveredArc] = useState(null);
+  const [hoveredArc, setHoveredArc] = useState<number | null>(null);
   // SVG arc math
   const radius = 84;
   const stroke = 18;
@@ -47,159 +48,352 @@ export default function FreelancerHome() {
   const router = useRouter();
 
   return (
-    <div className="freelancer-home-bg">
-      {/* Navbar (placeholder, you can extract to a component) */}
-      <nav className="navbar gradient-bg">
-        <div className="navbar-left">
-          <span className="logo">Logo</span>
-          <a href="#" className="nav-link">Find Jobs</a>
-          <a href="#" className="nav-link">How It Works</a>
-          <a href="#" className="nav-link">Proposals</a>
-          <a href="#" className="nav-link">Messages</a>
-        </div>
-        <div className="navbar-right">
-          <input className="nav-search" placeholder="Search" />
-          <button className="nav-job-btn">Jobs ▾</button>
-          <span className="nav-avatar">🧑‍💻</span>
+    <div className="min-h-screen bg-gray-50">
+      {/* Navbar */}
+      <nav className="bg-gradient-to-r from-secondary-900 to-primary-500 text-white px-8 py-4">
+        <div className="max-w-7xl mx-auto flex justify-between items-center">
+          <div className="flex items-center space-x-6">
+            <span className="text-xl font-bold">Logo</span>
+            <a
+              href="#"
+              className="text-white hover:text-primary-200 transition-colors font-medium"
+            >
+              Find Jobs
+            </a>
+            <a
+              href="#"
+              className="text-white hover:text-primary-200 transition-colors font-medium"
+            >
+              How It Works
+            </a>
+            <a
+              href="#"
+              className="text-white hover:text-primary-200 transition-colors font-medium"
+            >
+              Proposals
+            </a>
+            <a
+              href="#"
+              className="text-white hover:text-primary-200 transition-colors font-medium"
+            >
+              Messages
+            </a>
+          </div>
+          <div className="flex items-center space-x-4">
+            <input
+              className="px-4 py-2 rounded-lg text-gray-900"
+              placeholder="Search"
+            />
+            <button className="bg-white text-secondary-900 px-4 py-2 rounded-lg font-medium hover:bg-primary-200 transition-colors">
+              Jobs ▾
+            </button>
+            <span className="text-2xl">🧑‍💻</span>
+          </div>
         </div>
       </nav>
-      <div className="freelancer-home-main">
-        {/* Left Column */}
-        <div className="freelancer-home-left">
-          {/* Carousel (Trust Score) */}
-          <div className="carousel-card dashboard-card" style={{ background: '#ede7fa', display: 'flex', alignItems: 'center', justifyContent: 'flex-start', padding: '1.5rem 2rem' }}>
-            <div className="trust-score-circle trust-score-circle-wide" style={{ background: 'none', minWidth: 160, minHeight: 160, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <svg width="200" height="200" viewBox="0 0 200 200">
-                <circle cx={center} cy={center} r={radius} stroke="#ede7fa" strokeWidth={stroke} fill="none" />
-                {trustBreakdown.map((item, i) => {
-                  const arcLen = circumference * (item.percent / 100);
-                  const arc = (
-                    <circle
+
+      <div className="max-w-7xl mx-auto px-8 py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Left Column */}
+          <div className="lg:col-span-2 space-y-6">
+            {/* Trust Score Card */}
+            <div className="bg-purple-50 rounded-2xl p-6 flex items-center">
+              <div className="flex-shrink-0 w-40 h-40">
+                <svg
+                  width="200"
+                  height="200"
+                  viewBox="0 0 200 200"
+                  className="w-full h-full"
+                >
+                  <circle
+                    cx={center}
+                    cy={center}
+                    r={radius}
+                    stroke="#ede7fa"
+                    strokeWidth={stroke}
+                    fill="none"
+                  />
+                  {trustBreakdown.map((item, i) => {
+                    const arcLen = circumference * (item.percent / 100);
+                    const arc = (
+                      <circle
+                        key={item.label}
+                        cx={center}
+                        cy={center}
+                        r={radius}
+                        stroke={item.color}
+                        strokeWidth={stroke}
+                        fill="none"
+                        strokeDasharray={`${arcLen} ${circumference - arcLen}`}
+                        strokeDashoffset={-offset}
+                        strokeLinecap="round"
+                        style={{
+                          cursor: "pointer",
+                          opacity:
+                            hoveredArc === i || hoveredArc === null ? 1 : 0.3,
+                          transition: "opacity 0.2s",
+                        }}
+                        onMouseEnter={() => setHoveredArc(i)}
+                        onMouseLeave={() => setHoveredArc(null)}
+                      />
+                    );
+                    offset += arcLen;
+                    return arc;
+                  })}
+                  <text
+                    x="100"
+                    y="98"
+                    textAnchor="middle"
+                    fontSize="2.1rem"
+                    fontWeight="900"
+                    fill="#4b2e83"
+                  >
+                    {trustScore}%
+                  </text>
+                  <text
+                    x="100"
+                    y="125"
+                    textAnchor="middle"
+                    fontSize="1.05rem"
+                    fontWeight="700"
+                    fill="#5B61F6"
+                  >
+                    Trust Score
+                  </text>
+                </svg>
+              </div>
+              <div className="ml-8">
+                <div className="space-y-3">
+                  {trustBreakdown.map((item, i) => (
+                    <div
+                      className="flex items-center gap-3"
                       key={item.label}
-                      cx={center}
-                      cy={center}
-                      r={radius}
-                      stroke={item.color}
-                      strokeWidth={stroke}
-                      fill="none"
-                      strokeDasharray={`${arcLen} ${circumference - arcLen}`}
-                      strokeDashoffset={-offset}
-                      strokeLinecap="round"
-                      style={{ cursor: 'pointer', opacity: hoveredArc === i || hoveredArc === null ? 1 : 0.3, transition: 'opacity 0.2s' }}
-                      onMouseEnter={() => setHoveredArc(i)}
-                      onMouseLeave={() => setHoveredArc(null)}
-                    />
-                  );
-                  offset += arcLen;
-                  return arc;
-                })}
-                <text x="100" y="98" textAnchor="middle" fontSize="2.1rem" fontWeight="900" fill="#4b2e83">{trustScore}%</text>
-                <text x="100" y="125" textAnchor="middle" fontSize="1.05rem" fontWeight="700" fill="#5B61F6">Trust Score</text>
-              </svg>
+                      style={{ fontWeight: hoveredArc === i ? 700 : 500 }}
+                    >
+                      <span
+                        className="w-4 h-4 rounded-full border-2"
+                        style={{
+                          background: item.color,
+                          borderColor:
+                            hoveredArc === i ? "#4b2e83" : "transparent",
+                        }}
+                      ></span>
+                      <span className="text-gray-700">{item.label}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
-            <div className="trust-score-right trust-score-right-wide" style={{ marginLeft: 32 }}>
-              <div className="trust-score-legend">
-                {trustBreakdown.map((item, i) => (
-                  <div className="trust-legend-row" key={item.label} style={{ fontWeight: hoveredArc === i ? 700 : 500, display: 'flex', alignItems: 'center', marginBottom: 6 }}>
-                    <span className="trust-legend-dot" style={{ background: item.color, border: hoveredArc === i ? '2px solid #4b2e83' : 'none', width: 14, height: 14, borderRadius: '50%', display: 'inline-block', marginRight: 8 }}></span>
-                    <span className="trust-legend-label" style={{ color: '#4b2e83', fontSize: '1rem' }}>{item.label}</span>
+
+            {/* Stats Row */}
+            <div className="grid grid-cols-2 gap-6">
+              <div className="bg-white rounded-xl shadow-md p-6">
+                <div className="text-sm font-medium text-gray-500 mb-2">
+                  My Projects
+                </div>
+                <div className="text-3xl font-bold text-gray-900">
+                  {totalProjects}
+                </div>
+                <div className="text-sm text-gray-500">Total Projects</div>
+              </div>
+              <div className="bg-white rounded-xl shadow-md p-6">
+                <div className="text-sm font-medium text-gray-500 mb-2">
+                  Active Bids
+                </div>
+                <div className="text-3xl font-bold text-gray-900">
+                  {currentBids}
+                </div>
+                <div className="text-sm text-gray-500">Current Bids</div>
+              </div>
+            </div>
+
+            {/* Jobs Section */}
+            <div className="bg-white rounded-2xl shadow-lg p-6">
+              <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
+                <h2 className="text-xl font-bold text-gray-900 mb-4 md:mb-0">
+                  Jobs you Might Like
+                </h2>
+                <div className="flex bg-gray-100 rounded-lg p-1">
+                  <span className="px-4 py-2 bg-white text-primary-600 rounded-md font-medium shadow-sm">
+                    Most Recent
+                  </span>
+                  <span className="px-4 py-2 text-gray-600 hover:text-gray-900 transition-colors">
+                    Past Jobs
+                  </span>
+                  <span className="px-4 py-2 text-gray-600 hover:text-gray-900 transition-colors">
+                    Saved Jobs
+                  </span>
+                </div>
+              </div>
+
+              <div className="space-y-6">
+                {jobs.map((job, idx) => (
+                  <div
+                    className="border border-gray-200 rounded-xl p-6 hover:shadow-md transition-shadow"
+                    key={idx}
+                  >
+                    <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-4">
+                      <h3 className="text-lg font-semibold text-gray-900 mb-2 md:mb-0">
+                        {job.title}
+                      </h3>
+                      <button className="bg-primary-500 text-white px-4 py-2 rounded-lg font-medium hover:bg-primary-600 transition-colors">
+                        Send a Proposal
+                      </button>
+                    </div>
+                    <p className="text-gray-700 mb-4">{job.description}</p>
+                    <div className="flex flex-wrap gap-2 mb-4">
+                      {job.tags.map((tag) => (
+                        <span
+                          className="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm"
+                          key={tag}
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 mb-4">
+                      <span className="text-gray-600">
+                        Proposals: <b>{job.proposals}</b>
+                      </span>
+                      <span className="text-gray-600">
+                        Client Trust Score: <b>{job.clientTrust}</b>
+                      </span>
+                    </div>
+                    <div className="flex gap-2">
+                      {job.photos.map((_, i) => (
+                        <div
+                          className="w-16 h-16 bg-gray-200 rounded-lg flex items-center justify-center"
+                          key={i}
+                        >
+                          <span className="text-2xl">🖼️</span>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 ))}
               </div>
             </div>
           </div>
-          {/* Stats Row */}
-          <div className="dashboard-stats-row freelancer-stats-row">
-            <div className="dashboard-stat-card">
-              <div className="stat-title small-title">My Projects</div>
-              <div className="stat-value">{totalProjects}</div>
-              <div className="stat-desc">Total Projects</div>
+
+          {/* Right Column */}
+          <div className="space-y-6">
+            <div className="bg-white rounded-2xl shadow-lg p-6 text-center">
+              <div className="text-4xl mb-4">🧑‍💻</div>
+              <div className="font-semibold text-gray-900 mb-2">Name</div>
+              <div className="text-gray-600 mb-4">Metamask ID</div>
+              <button className="bg-primary-500 text-white px-6 py-2 rounded-lg font-medium hover:bg-primary-600 transition-colors">
+                Upgrade your Profile
+              </button>
             </div>
-            <div className="dashboard-stat-card">
-              <div className="stat-title small-title">Active Bids</div>
-              <div className="stat-value">{currentBids}</div>
-              <div className="stat-desc">Current Bids</div>
-            </div>
+            <div className="bg-white rounded-2xl shadow-lg p-6 h-32"></div>
+            <div className="bg-white rounded-2xl shadow-lg p-6 h-32"></div>
+            <div className="bg-white rounded-2xl shadow-lg p-6 h-32"></div>
           </div>
-          {/* Jobs You Might Like */}
-          <div className="jobs-section">
-            <div className="jobs-header">
-              <span className="jobs-title">Jobs you Might Like</span>
-              <div className="jobs-tabs">
-                <span className="jobs-tab active">Most Recent</span>
-                <span className="jobs-tab">Past Jobs</span>
-                <span className="jobs-tab">Saved Jobs</span>
-              </div>
-            </div>
-            <div className="jobs-list">
-              {jobs.map((job, idx) => (
-                <div className="job-card" key={idx}>
-                  <div className="job-title-row">
-                    <span className="job-title">{job.title}</span>
-                    <button className="job-proposal-btn">Send a Proposal</button>
-                  </div>
-                  <div className="job-desc">{job.description}</div>
-                  <div className="job-tags-row">
-                    {job.tags.map(tag => (
-                      <span className="job-tag" key={tag}>{tag}</span>
-                    ))}
-                  </div>
-                  <div className="job-meta-row">
-                    <span className="job-meta">Proposals: <b>{job.proposals}</b></span>
-                    <span className="job-meta">Client Trust Score: <b>{job.clientTrust}</b></span>
-                  </div>
-                  <div className="job-photos-row">
-                    {job.photos.map((_, i) => (
-                      <div className="job-photo" key={i}> <span className="job-photo-placeholder">🖼️</span> </div>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-        {/* Right Column */}
-        <div className="freelancer-home-right">
-          <div className="profile-card">
-            <div className="profile-avatar">🧑‍💻</div>
-            <div className="profile-name">Name</div>
-            <div className="profile-wallet">Metamask ID</div>
-            <button className="profile-upgrade-btn">Upgrade your Profile</button>
-          </div>
-          <div className="sidebar-card"></div>
-          <div className="sidebar-card"></div>
-          <div className="sidebar-card"></div>
         </div>
       </div>
-      {/* Footer (reuse from homepage) */}
-      <footer className="footer improved-footer-gradient">
-        <div className="footer-main">
-          <div className="footer-links-group">
-            <div className="footer-links-title">For Clients</div>
-            <a href="#">For Clients</a>
-            <a href="#">For Freelancers</a>
-            <a href="#" onClick={e => { e.preventDefault(); router.push('/dashboard'); }}>Help</a>
-          </div>
-          <div className="footer-links-group">
-            <div className="footer-links-title">Company</div>
-            <a href="#">About Us</a>
-            <a href="#">Resources</a>
-            <a href="#">Contact Us</a>
-          </div>
-          <div className="footer-logo-group">
-            <span className="footer-logo">photo</span>
-            <div className="footer-social">
-              <a href="#" className="footer-social-icon"> <Image src="/github.svg" alt="GitHub" width={24} height={24} /> </a>
-              <a href="#" className="footer-social-icon"> <Image src="/linkedin.svg" alt="LinkedIn" width={24} height={24} /> </a>
-              <a href="#" className="footer-social-icon"> <Image src="/facebook.svg" alt="Facebook" width={24} height={24} /> </a>
-              <a href="#" className="footer-social-icon"> <Image src="/x.svg" alt="X" width={24} height={24} /> </a>
+
+      {/* Footer */}
+      <footer className="bg-gradient-to-br from-gray-900 to-gray-800 text-white mt-16">
+        <div className="max-w-7xl mx-auto px-8 py-12">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div>
+              <div className="font-semibold text-lg mb-4">For Clients</div>
+              <div className="space-y-2">
+                <a
+                  href="#"
+                  className="block text-gray-300 hover:text-white transition-colors"
+                >
+                  For Clients
+                </a>
+                <a
+                  href="#"
+                  className="block text-gray-300 hover:text-white transition-colors"
+                >
+                  For Freelancers
+                </a>
+                <button
+                  onClick={() => router.push("/dashboard")}
+                  className="block text-gray-300 hover:text-white transition-colors text-left"
+                >
+                  Help
+                </button>
+              </div>
+            </div>
+            <div>
+              <div className="font-semibold text-lg mb-4">Company</div>
+              <div className="space-y-2">
+                <a
+                  href="#"
+                  className="block text-gray-300 hover:text-white transition-colors"
+                >
+                  About Us
+                </a>
+                <a
+                  href="#"
+                  className="block text-gray-300 hover:text-white transition-colors"
+                >
+                  Resources
+                </a>
+                <a
+                  href="#"
+                  className="block text-gray-300 hover:text-white transition-colors"
+                >
+                  Contact Us
+                </a>
+              </div>
+            </div>
+            <div>
+              <div className="font-bold text-xl mb-4">FreeFlow</div>
+              <div className="flex space-x-4">
+                <a
+                  href="#"
+                  className="text-gray-300 hover:text-white transition-colors"
+                >
+                  <Image
+                    src="/github.svg"
+                    alt="GitHub"
+                    width={24}
+                    height={24}
+                  />
+                </a>
+                <a
+                  href="#"
+                  className="text-gray-300 hover:text-white transition-colors"
+                >
+                  <Image
+                    src="/linkedin.svg"
+                    alt="LinkedIn"
+                    width={24}
+                    height={24}
+                  />
+                </a>
+                <a
+                  href="#"
+                  className="text-gray-300 hover:text-white transition-colors"
+                >
+                  <Image
+                    src="/facebook.svg"
+                    alt="Facebook"
+                    width={24}
+                    height={24}
+                  />
+                </a>
+                <a
+                  href="#"
+                  className="text-gray-300 hover:text-white transition-colors"
+                >
+                  <Image src="/x.svg" alt="X" width={24} height={24} />
+                </a>
+              </div>
             </div>
           </div>
         </div>
-        <div className="footer-bottom">
-          <span>© {new Date().getFullYear()} FreeFlow. All rights reserved.</span>
+        <div className="border-t border-gray-700 py-6">
+          <div className="max-w-7xl mx-auto px-8 text-center text-gray-400">
+            © {new Date().getFullYear()} FreeFlow. All rights reserved.
+          </div>
         </div>
       </footer>
     </div>
   );
-} 
+}
