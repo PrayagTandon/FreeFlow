@@ -1,5 +1,5 @@
 "use client";
-import "./globals.css";
+// import "./globals.css";
 import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -377,53 +377,55 @@ export default function HomePage() {
           </div>
         </div>
       )}
-
+      <main className="min-h-screen">
       {/* Navbar */}
-      <nav className="bg-gradient-to-r from-secondary-900 to-primary-500 text-white px-8 py-4">
-        <div className="max-w-7xl mx-auto flex justify-between items-center">
-          <div className="flex items-center space-x-6">
+      <nav className="w-full h-18 bg-gradient-1 text-offwhite px-12 py-4">
+        <div className="mx-auto flex justify-between items-center">
+          {/* Text */}
+          <div className="flex items-center space-x-12">
             <span className="text-xl font-bold">Logo</span>
             <button
-              className="text-white hover:text-primary-200 transition-colors font-medium"
+              className="transition-colors font-medium hover:text-white hover:underline"
               onClick={() => setHowModalOpen(true)}
             >
               How It Works ▾
             </button>
-            <button className="text-white hover:text-primary-200 transition-colors font-medium">
+            <button className="transition-colors font-medium hover:text-white hover:underline">
               Search ▾
             </button>
             <button
-              className="text-white hover:text-primary-200 transition-colors font-medium"
+              className="transition-colors font-medium hover:text-white hover:underline"
               onClick={() => setAboutOpen(true)}
             >
               About Us
             </button>
             <button
-              className="text-white hover:text-primary-200 transition-colors font-medium"
+              className="transition-colors font-medium hover:text-white hover:underline"
               onClick={() => setContactOpen(true)}
             >
               Contact Us
             </button>
             <button
-              className="text-white hover:text-primary-200 transition-colors font-medium"
+              className="transition-colors font-medium hover:text-white hover:underline"
               onClick={() => setResourcesOpen(true)}
             >
               Resources
             </button>
-            <button className="text-white hover:text-primary-200 transition-colors font-medium">
+            <button className="transition-colors font-medium hover:text-white hover:underline">
               Pricing
             </button>
           </div>
-          <div className="flex items-center space-x-4">
+          {/* Buttons */}
+          <div className="flex items-center space-x-6">
             <Link
               href="/login"
-              className="bg-white text-secondary-900 px-6 py-2 rounded-full font-semibold hover:bg-primary-200 transition-colors"
+              className="btn--secondary text-color-black px-6 py-2 rounded-full font-semibold hover:bg-primary-200 transition-colors"
             >
               Log In
             </Link>
             <Link
               href="/register"
-              className="bg-primary-500 text-white px-6 py-2 rounded-full font-semibold hover:bg-primary-600 transition-colors"
+              className="btn--primary text-offwhite px-6 py-2 rounded-full font-semibold hover:bg-primary-600 transition-colors"
             >
               Register
             </Link>
@@ -432,13 +434,14 @@ export default function HomePage() {
       </nav>
 
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900 relative overflow-hidden rounded-2xl mx-8 my-8 shadow-2xl">
-        <div className="relative z-10 w-full px-8 py-12 flex flex-col items-start">
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-4 leading-tight">
-            Work Without <span className="text-primary-400">Worry</span>.<br />
-            Get Paid with <span className="text-primary-400">Trust</span>.
+      <section className="bg-[url(/Hero_Img.jpg)] bg-cover relative overflow-hidden rounded-2xl mx-32 my-8 shadow-2xl h-[calc(100vh-9rem)]">
+      <div className="bg-[rgb(0,0,0,70%)] h-full">
+        <div className="relative z-10 w-full h-full px-8 py-12 flex flex-col items-center justify-center">
+          <h1 className="text-4xl md:text-5xl font-bold text-center text-offwhite mb-8">
+            <p className="leading-[3.5rem]">Work Without <span className="text-orange">Worry</span>. </p>
+            <p className="leading-[3.5rem]">Get Paid with <span className="text-orange">Trust</span>.</p>
           </h1>
-          <p className="text-xl text-white/90 mb-8 max-w-2xl">
+          <p className="w-2/4 text-md text-center leading-7 text-lightgrey mb-8 max-w-2xl">
             A blockchain-powered platform that enables secure payments and trust
             for freelance work. No middlemen. No surprises.
           </p>
@@ -457,7 +460,9 @@ export default function HomePage() {
             </button>
           </div>
         </div>
+      </div>
       </section>
+      </main>
 
       {/* Professions Section */}
       <section className="bg-yellow-50 mx-8 my-16 rounded-2xl shadow-lg p-8 text-center">

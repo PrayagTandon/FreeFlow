@@ -32,7 +32,44 @@ body,
 }
 
 body {
-  background: var(--background);
+  background: #F5f5f5;
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+.color-primary {
+  background-color: #27187e;
+}
+.color-accent {
+  background-color: #FF8600;
+}
+.color-Bg {
+  background-color: #F8F9E7;
+}
+.text-color-black {
+  color: #1f1f1f;
+}
+.text-darkgrey {
+  color: #8c8c8c;
+}
+.text-lightgrey {
+  color: #d9d9d9;
+}
+.text-offwhite {
+  color: #f8f9e7;
+}
+.text-orange {
+  color:#FF8600;
+}
+.bg-gradient-1 {
+  background-image: linear-gradient(to right bottom, rgba(61, 47, 139, 85%), rgba(35, 22, 113, 90%) );
+}
+.bg-gradient-2 {
+  background-image: linear-gradient(to right bottom, rgb(255, 146, 26), rgb(230, 121, 0) );
+}
+  .btn--primary {
+    background-color: #FF8600;
+  }
+  .btn--secondary {
+    background-color: #F8F9E7;
+  }
