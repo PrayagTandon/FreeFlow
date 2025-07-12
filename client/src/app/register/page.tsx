@@ -1,11 +1,20 @@
 "use client";
 import Link from "next/link";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function Register() {
   const [role, setRole] = useState("Freelancer");
   const [wallet, setWallet] = useState("");
   const [connecting, setConnecting] = useState(false);
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const router = useRouter();
 
   async function connectWallet(e: React.MouseEvent) {
     e.preventDefault();
@@ -25,13 +34,56 @@ export default function Register() {
     }
   }
 
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setError("");
+    if (
+      !firstName ||
+      !lastName ||
+      !email ||
+      !password ||
+      !confirmPassword ||
+      !wallet
+    ) {
+      setError("All fields including wallet are required.");
+      return;
+    }
+    if (password !== confirmPassword) {
+      setError("Passwords do not match.");
+      return;
+    }
+    setLoading(true);
+    try {
+      const res = await fetch("http://localhost:5000/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email,
+          password,
+          metamaskId: wallet,
+          // Optionally send firstName, lastName, role if backend supports
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setError(data.message || "Registration failed");
+      } else {
+        // Registration successful, redirect to login or freelancer-home
+        router.push("/login");
+      }
+    } catch (err) {
+      setError("Something went wrong. Please try again.");
+    }
+    setLoading(false);
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 to-yellow-50 flex items-center justify-center p-4">
       <div className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md border-4 border-orange-200">
         <h1 className="text-3xl font-bold text-orange-600 text-center mb-8">
           SignUp for a Free Account
         </h1>
-        <form className="space-y-6">
+        <form className="space-y-6" onSubmit={handleSubmit}>
           <div className="grid grid-cols-2 gap-4">
             <input
               type="text"
@@ -39,6 +91,8 @@ export default function Register() {
               placeholder="First Name"
               className="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-colors"
               required
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
             />
             <input
               type="text"
@@ -46,6 +100,8 @@ export default function Register() {
               placeholder="Last Name"
               className="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-colors"
               required
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
             />
           </div>
           <input
@@ -54,6 +110,8 @@ export default function Register() {
             placeholder="Email"
             className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-colors"
             required
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
           />
           <input
             type="password"
@@ -61,6 +119,8 @@ export default function Register() {
             placeholder="Create Password"
             className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-colors"
             required
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
           />
           <input
             type="password"
@@ -68,6 +128,8 @@ export default function Register() {
             placeholder="Confirm Password"
             className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-colors"
             required
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
           />
 
           <div className="flex items-center gap-6">
@@ -115,11 +177,14 @@ export default function Register() {
             </button>
           </div>
 
+          {error && <div className="text-red-500 text-center">{error}</div>}
+
           <button
             type="submit"
             className="w-full bg-orange-500 text-white py-3 rounded-lg font-semibold hover:bg-orange-600 transition-colors"
+            disabled={loading}
           >
-            Register
+            {loading ? "Registering..." : "Register"}
           </button>
         </form>
         <div className="text-center mt-6 space-y-2">
