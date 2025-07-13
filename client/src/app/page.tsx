@@ -110,6 +110,7 @@ export default function HomePage() {
   const [contactOpen, setContactOpen] = useState(false);
   const [resourcesOpen, setResourcesOpen] = useState(false);
   const [howModalOpen, setHowModalOpen] = useState(false);
+   const [selectedRole, setSelectedRole] = useState("freelancer"); 
 
   const steps = howMode === "Client" ? howItWorksClient : howItWorksFreelancer;
 
@@ -449,21 +450,34 @@ export default function HomePage() {
           <div className="w-1/3 bg-gradient-1 py-10 px-6 rounded-2xl p-2 shadow-lg">
             {/* Buttons */}
             <div className="flex justify-center items-center mb-2">
-              <button
+                <button
                 type="button"
-                className="px-6 py-2 color-Bg text-base font-medium border-none outline-none rounded-l-xl mb-6">Client
+                onClick={() => setSelectedRole("client")}
+                className={`px-6 py-2 text-base font-medium border-none outline-none mb-6 rounded-l-xl transition-colors duration-200
+                ${selectedRole === "client" ? "color-accent text-offwhite" : "color-Bg text-color-black"}`}
+              >
+                Client
               </button>
+
               <button
                 type="button"
-                className="px-6 py-2 color-accent text-offwhite text-base font-medium border-none outline-none rounded-r-xl mb-6">Freelancer
+                onClick={() => setSelectedRole("freelancer")}
+                className={`px-6 py-2 text-base font-medium border-none outline-none mb-6 rounded-r-xl transition-colors duration-200
+                ${selectedRole === "freelancer" ? "color-accent text-offwhite" : "color-Bg text-color-black"}`}
+              >
+                Freelancer
               </button>
             </div>
             {/* Input */}
             <div className="relative">
-            <input
-              type="text"
-              placeholder="Search Jobs, Skills, Keywords"
-              className="w-full flex-1 px-5 py-5 border-none outline-none rounded-xl text-gray-900 mb-6"
+              <input
+                type="text"
+                placeholder={
+                  selectedRole === "freelancer"
+                    ? "Search Jobs, Skills, Keywords"
+                    : "Search Freelancers, Grow Reputation"
+                }
+                className="w-full flex-1 px-5 py-5 border-none outline-none rounded-xl text-gray-900 mb-6"
               />
             {/* Search button */}
             <button
