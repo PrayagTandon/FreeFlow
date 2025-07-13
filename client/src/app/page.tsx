@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { FaSearch } from "react-icons/fa";
 
 const professionData = [
   {
@@ -384,51 +385,51 @@ export default function HomePage() {
           {/* Text */}
           <div className="flex items-center space-x-12">
             <span className="text-xl font-bold">Logo</span>
-            <button
+            <a
               className="transition-colors font-medium hover:text-white hover:underline"
               onClick={() => setHowModalOpen(true)}
             >
               How It Works ▾
-            </button>
-            <button className="transition-colors font-medium hover:text-white hover:underline">
+            </a>
+            <a className="transition-colors font-medium hover:text-white hover:underline">
               Search ▾
-            </button>
-            <button
+            </a>
+            <a
               className="transition-colors font-medium hover:text-white hover:underline"
               onClick={() => setAboutOpen(true)}
             >
               About Us
-            </button>
-            <button
+            </a>
+            <a
               className="transition-colors font-medium hover:text-white hover:underline"
               onClick={() => setContactOpen(true)}
             >
               Contact Us
-            </button>
-            <button
+            </a>
+            <a
               className="transition-colors font-medium hover:text-white hover:underline"
               onClick={() => setResourcesOpen(true)}
             >
               Resources
-            </button>
-            <button className="transition-colors font-medium hover:text-white hover:underline">
+            </a>
+            <a className="transition-colors font-medium hover:text-white hover:underline">
               Pricing
-            </button>
+            </a>
           </div>
           {/* Buttons */}
           <div className="flex items-center space-x-6">
-            <Link
+            <a
               href="/login"
               className="btn--secondary text-color-black px-6 py-2 rounded-full font-semibold hover:bg-primary-200 transition-colors"
             >
               Log In
-            </Link>
-            <Link
+            </a>
+            <a
               href="/register"
               className="btn--primary text-offwhite px-6 py-2 rounded-full font-semibold hover:bg-primary-600 transition-colors"
             >
               Register
-            </Link>
+            </a>
           </div>
         </div>
       </nav>
@@ -441,23 +442,37 @@ export default function HomePage() {
             <p className="leading-[3.5rem]">Work Without <span className="text-orange">Worry</span>. </p>
             <p className="leading-[3.5rem]">Get Paid with <span className="text-orange">Trust</span>.</p>
           </h1>
-          <p className="w-2/4 text-md text-center leading-7 text-lightgrey mb-8 max-w-2xl">
+          <p className="w-1/3 text-md text-center leading-6 text-lightgrey mb-8 max-w-2xl">
             A blockchain-powered platform that enables secure payments and trust
             for freelance work. No middlemen. No surprises.
           </p>
-          <div className="flex flex-col sm:flex-row gap-3 bg-white rounded-2xl p-2 shadow-lg">
+          <div className="w-1/3 bg-gradient-1 py-10 px-6 rounded-2xl p-2 shadow-lg">
+            {/* Buttons */}
+            <div className="flex justify-center items-center mb-2">
+              <button
+                type="button"
+                className="px-6 py-2 color-Bg text-base font-medium border-none outline-none rounded-l-xl mb-6">Client
+              </button>
+              <button
+                type="button"
+                className="px-6 py-2 color-accent text-offwhite text-base font-medium border-none outline-none rounded-r-xl mb-6">Freelancer
+              </button>
+            </div>
+            {/* Input */}
+            <div className="relative">
             <input
               type="text"
               placeholder="Search Jobs, Skills, Keywords"
-              className="flex-1 px-4 py-3 border-none outline-none rounded-xl text-gray-900"
-            />
-            <select className="px-4 py-3 bg-gray-100 border-none outline-none rounded-xl text-gray-900">
-              <option>Client</option>
-              <option>Freelancer</option>
-            </select>
-            <button className="bg-primary-500 text-white px-6 py-3 rounded-xl font-semibold hover:bg-primary-600 transition-colors">
-              Search
+              className="w-full flex-1 px-5 py-5 border-none outline-none rounded-xl text-gray-900 mb-6"
+              />
+            {/* Search button */}
+            <button
+              type="button" 
+              className="absolute bottom-[40%] right-[2%] color-accent text-offwhite text-base px-4 py-2 rounded-xl font-semibold hover:color-primary transition-colors flex items-center gap-3">
+                <FaSearch />
+              <span>Search</span>
             </button>
+            </div>
           </div>
         </div>
       </div>
