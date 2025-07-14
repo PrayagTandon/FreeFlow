@@ -1,14 +1,75 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function Login() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [wallet, setWallet] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const router = useRouter();
+
+  async function connectWallet(e: React.MouseEvent) {
+    e.preventDefault();
+    if (typeof window !== "undefined" && (window as any).ethereum) {
+      try {
+        const accounts = await (window as any).ethereum.request({
+          method: "eth_requestAccounts",
+        });
+        setWallet(accounts[0]);
+      } catch (err) {
+        alert("Could not connect to wallet.");
+      }
+    } else {
+      alert("Metamask or a compatible wallet is not installed.");
+    }
+  }
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setError("");
+    if (!email || !password || !wallet) {
+      setError("All fields including wallet are required.");
+      return;
+    }
+    setLoading(true);
+    try {
+      const res = await fetch("http://localhost:5000/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password, metamaskId: wallet }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setError(data.message || "Login failed");
+      } else {
+        // Store token and user info in localStorage
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("user", JSON.stringify(data.user));
+        // Redirect based on role
+        if (data.user.role === "freelancer") {
+          router.push("/freelancer-home");
+        } else {
+          router.push("/dashboard");
+        }
+      }
+    } catch (err) {
+      setError("Something went wrong. Please try again.");
+    }
+    setLoading(false);
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900 flex items-center justify-center p-4">
       <div className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md">
         <h1 className="text-3xl font-bold text-gray-900 text-center mb-8">
           Log In to FreeFlow
         </h1>
-        <form className="space-y-6">
+        <form className="space-y-6" onSubmit={handleSubmit}>
           <div>
             <label
               htmlFor="email"
@@ -23,6 +84,8 @@ export default function Login() {
               placeholder="Enter your email"
               required
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-colors"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
             />
           </div>
           <div>
@@ -39,13 +102,39 @@ export default function Login() {
               placeholder="Enter your password"
               required
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-colors"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
             />
           </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Metamask Wallet
+            </label>
+            <div className="flex gap-2">
+              <input
+                type="text"
+                name="wallet"
+                placeholder="Metamask Wallet ID"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg bg-gray-50"
+                value={wallet}
+                readOnly
+              />
+              <button
+                className="bg-primary-500 text-white px-4 py-2 rounded-lg font-medium hover:bg-primary-600 transition-colors"
+                onClick={connectWallet}
+                type="button"
+              >
+                Connect
+              </button>
+            </div>
+          </div>
+          {error && <div className="text-red-500 text-center">{error}</div>}
           <button
             type="submit"
             className="w-full bg-primary-500 text-white py-3 rounded-lg font-semibold hover:bg-primary-600 transition-colors"
+            disabled={loading}
           >
-            Log In with Email
+            {loading ? "Logging in..." : "Log In with Email"}
           </button>
         </form>
         <div className="text-center my-6">

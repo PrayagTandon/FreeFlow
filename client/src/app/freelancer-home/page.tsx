@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 
@@ -34,18 +34,48 @@ const jobs = [
 ];
 
 export default function FreelancerHome() {
-  // Stats (easy to connect to backend)
+  const [user, setUser] = useState<{
+    id?: string;
+    email?: string;
+    metamaskId?: string;
+    role?: string;
+    firstName?: string;
+    lastName?: string;
+  } | null>(null);
+  const [hoveredArc, setHoveredArc] = useState<number | null>(null);
   const trustScore = 100;
   const totalProjects = 5;
   const currentBids = 2;
-  const [hoveredArc, setHoveredArc] = useState<number | null>(null);
-  // SVG arc math
   const radius = 84;
   const stroke = 18;
   const center = 100;
   const circumference = 2 * Math.PI * radius;
   let offset = 0;
   const router = useRouter();
+
+  useEffect(() => {
+    // Get user from localStorage
+    const userStr =
+      typeof window !== "undefined" ? localStorage.getItem("user") : null;
+    if (!userStr) {
+      router.push("/login");
+      return;
+    }
+    try {
+      const userObj = JSON.parse(userStr);
+      if (userObj.role !== "freelancer") {
+        router.push("/dashboard");
+        return;
+      }
+      setUser(userObj);
+    } catch {
+      router.push("/login");
+    }
+  }, [router]);
+
+  if (!user) {
+    return null; // or a loading spinner
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -92,7 +122,26 @@ export default function FreelancerHome() {
         </div>
       </nav>
 
+      {/* User Info Card */}
       <div className="max-w-7xl mx-auto px-8 py-8">
+        <div className="bg-white rounded-2xl shadow-lg p-6 mb-8 flex flex-col md:flex-row gap-8 items-center">
+          <div className="flex flex-col gap-2">
+            <div className="text-lg font-bold text-gray-900">
+              Welcome, Freelancer!
+            </div>
+            <div className="text-gray-700">
+              <b>Email:</b> {user.email}
+            </div>
+            <div className="text-gray-700">
+              <b>Wallet:</b> {user.metamaskId}
+            </div>
+            <div className="text-gray-700">
+              <b>Role:</b> {user.role}
+            </div>
+            {/* Add more user fields here if available */}
+          </div>
+        </div>
+
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Left Column */}
           <div className="lg:col-span-2 space-y-6">
@@ -198,12 +247,12 @@ export default function FreelancerHome() {
               </div>
               <div className="bg-white rounded-xl shadow-md p-6">
                 <div className="text-sm font-medium text-gray-500 mb-2">
-                  Active Bids
+                  Current Bids
                 </div>
                 <div className="text-3xl font-bold text-gray-900">
                   {currentBids}
                 </div>
-                <div className="text-sm text-gray-500">Current Bids</div>
+                <div className="text-sm text-gray-500">Active Bids</div>
               </div>
             </div>
 
@@ -279,8 +328,16 @@ export default function FreelancerHome() {
           <div className="space-y-6">
             <div className="bg-white rounded-2xl shadow-lg p-6 text-center">
               <div className="text-4xl mb-4">🧑‍💻</div>
-              <div className="font-semibold text-gray-900 mb-2">Name</div>
-              <div className="text-gray-600 mb-4">Metamask ID</div>
+              <div className="font-semibold text-gray-900 mb-2">
+                {user.firstName || user.lastName
+                  ? `${user.firstName || ""} ${user.lastName || ""}`.trim()
+                  : user.email
+                  ? user.email.split("@")[0]
+                  : "N/A"}
+              </div>
+              <div className="text-gray-600 mb-4">
+                {user.metamaskId || "N/A"}
+              </div>
               <button className="bg-primary-500 text-white px-6 py-2 rounded-lg font-medium hover:bg-primary-600 transition-colors">
                 Upgrade your Profile
               </button>
