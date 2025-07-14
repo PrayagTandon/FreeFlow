@@ -507,20 +507,14 @@ export default function HomePage() {
           {professionData.map((prof, idx) => (
             <div
               key={prof.name}
-              className={`bg-white rounded-2xl shadow-md p-6 flex flex-col items-center cursor-pointer transition-all duration-200 hover:shadow-lg hover:border-2 hover:border-primary-300 ${
+              className={`bg-white rounded-2xl shadow-md px-6 py-8 flex flex-col text-lg items-center cursor-pointer transition-all duration-200 hover:shadow-lg border-2 border-transparent hover:border-2 hover:border-secondary-orange ${
                 selectedProfession === idx
-                  ? "bg-primary-500 text-white shadow-lg border-2 border-primary-500"
+                  ? "bg-primary-blue text-primary-off-white shadow-lg border-2 border-secondary-orange"
                   : "text-gray-700"
               }`}
-              // onClick={() => {
-              //   setSelectedProfession(idx);
-              //   if (
-              //     prof.name === "Development & Coding" ||
-              //     prof.name === "Freelancer"
-              //   ) {
-              //     router.push("/freelancer-home");
-              //   }
-              // }}
+              onClick={() => {
+                setSelectedProfession(idx);
+              }}
               tabIndex={0}
               role="button"
               aria-pressed={selectedProfession === idx}
@@ -533,18 +527,24 @@ export default function HomePage() {
           ))}
         </div>
         {selectedProfession !== null && (
-          <div className="bg-white rounded-2xl shadow-lg p-6 max-w-2xl mx-auto">
+          <div className="relative bg-white rounded-2xl shadow-lg p-6 max-w-2xl mx-auto">
             <div className="flex items-center gap-4 mb-4">
               <span className="text-3xl">
                 {professionData[selectedProfession].icon}
               </span>
-              <span className="text-xl font-bold text-gray-900">
+              <span className="text-xl font-bold text-primary-blue">
                 {professionData[selectedProfession].name}
               </span>
             </div>
-            <p className="text-gray-700 text-left">
+            <p className="text-primary-text-darkgrey leading-6 text-md text-center">
               {professionData[selectedProfession].desc}
             </p>
+             <a
+              href="/register"
+              className="absolute top-[18%] right-[5%] btn--primary text-offwhite px-6 py-2 rounded-full font-semibold hover:bg-primary-btn--hover transition-colors"
+            >
+              Get Started
+            </a>
           </div>
         )}
       </section>
