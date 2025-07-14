@@ -379,6 +379,7 @@ export default function HomePage() {
           </div>
         </div>
       )}
+      {/* Nav and Hero */}
       <main className="min-h-screen">
       {/* Navbar */}
       <nav className="w-full h-18 bg-gradient-1 text-offwhite px-12 py-4">
@@ -421,13 +422,13 @@ export default function HomePage() {
           <div className="flex items-center space-x-6">
             <a
               href="/login"
-              className="btn--secondary text-color-black px-6 py-2 rounded-full font-semibold hover:bg-primary-200 transition-colors"
+              className="btn--secondary text-color-black px-6 py-2 rounded-full font-semibold hover:bg-secondary-btn--hover transition-colors"
             >
               Log In
             </a>
             <a
               href="/register"
-              className="btn--primary text-offwhite px-6 py-2 rounded-full font-semibold hover:bg-primary-600 transition-colors"
+              className="btn--primary text-offwhite px-6 py-2 rounded-full font-semibold hover:bg-primary-btn--hover transition-colors"
             >
               Register
             </a>
@@ -440,7 +441,7 @@ export default function HomePage() {
       <div className="bg-[rgb(0,0,0,70%)] h-full">
         <div className="relative z-10 w-full h-full px-8 py-12 flex flex-col items-center justify-center">
           <h1 className="text-4xl md:text-5xl font-bold text-center text-offwhite mb-8">
-            <p className="leading-[3.5rem]">Work Without <span className="text-orange">Worry</span>. </p>
+            <p className="leading-[4rem]">Work Without <span className="text-orange">Worry</span>. </p>
             <p className="leading-[3.5rem]">Get Paid with <span className="text-orange">Trust</span>.</p>
           </h1>
           <p className="w-1/3 text-md text-center leading-6 text-lightgrey mb-8 max-w-2xl">
@@ -494,12 +495,14 @@ export default function HomePage() {
       </main>
 
       {/* Professions Section */}
-      <section className="bg-yellow-50 mx-8 my-16 rounded-2xl shadow-lg p-8 text-center">
-        <h2 className="text-2xl font-bold text-gray-900 mb-8">
+      <section className="bg-yellow-50 my-24 rounded-2xl shadow-lg py-12 px-32 text-center">
+        {/* Heading */}
+        <h2 className="text-3xl font-bold text-gray-900 mb-14">
           Explore Different{" "}
-          <span className="text-primary-600">Professions</span>, Get Paid With{" "}
-          <span className="text-primary-600">Trust</span>
+          <span className="text-secondary-orange">Professions</span>, Get Paid With{" "}
+          <span className="text-secondary-orange">Trust</span>
         </h2>
+        {/* Professions Grid */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-8">
           {professionData.map((prof, idx) => (
             <div
@@ -509,15 +512,15 @@ export default function HomePage() {
                   ? "bg-primary-500 text-white shadow-lg border-2 border-primary-500"
                   : "text-gray-700"
               }`}
-              onClick={() => {
-                setSelectedProfession(idx);
-                if (
-                  prof.name === "Development & Coding" ||
-                  prof.name === "Freelancer"
-                ) {
-                  router.push("/freelancer-home");
-                }
-              }}
+              // onClick={() => {
+              //   setSelectedProfession(idx);
+              //   if (
+              //     prof.name === "Development & Coding" ||
+              //     prof.name === "Freelancer"
+              //   ) {
+              //     router.push("/freelancer-home");
+              //   }
+              // }}
               tabIndex={0}
               role="button"
               aria-pressed={selectedProfession === idx}

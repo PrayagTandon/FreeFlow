@@ -31,7 +31,13 @@ const config: Config = {
   				'700': '#27272a',
   				'800': '#111113',
   				'900': '#040405',
-  				'950': '#000000'
+  				'950': '#000000',
+				'btn--hover': '#e67900',
+				'blue': '#27187e',
+				'off-white': '#f8f9e7',
+				'text-darkgrey': '#8c8c8c',
+				'text-lightgrey': '#d9d9d9',
+				
   			},
   			secondary: {
   				'50': '#fefcfc',
@@ -44,7 +50,10 @@ const config: Config = {
   				'700': '#dc2828',
   				'800': '#7c1414',
   				'900': '#400a0a',
-  				'950': '#2c0707'
+  				'950': '#2c0707',
+				'btn--hover': '#dfe0d0',
+				'orange': '#ff8600',
+				'text-black': '#1f1f1f'
   			},
   			muted: {
   				DEFAULT: 'hsl(var(--muted))',

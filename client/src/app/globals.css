@@ -67,9 +67,9 @@ body {
 .bg-gradient-2 {
   background-image: linear-gradient(to right bottom, rgb(255, 146, 26), rgb(230, 121, 0) );
 }
-  .btn--primary {
-    background-color: #FF8600;
-  }
-  .btn--secondary {
-    background-color: #F8F9E7;
-  }
+.btn--primary {
+  background-color: #FF8600;
+}
+.btn--secondary {
+  background-color: #F8F9E7;
+}
