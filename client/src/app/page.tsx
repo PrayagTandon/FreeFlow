@@ -550,9 +550,9 @@ export default function HomePage() {
       </section>
 
       {/* How It Works Section */}
-      <section className="mx-8 my-16">
+      <section className="px-32 my-24 border-4 border-red-600">
         <div className="flex flex-col md:flex-row justify-between items-center mb-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4 md:mb-0">
+          <h2 className="text-3xl font-bold w-full text-center text-secondary-orange mb-4 md:mb-0">
             How It Works <span className="text-primary-500">&gt;</span>
           </h2>
           <div className="flex bg-gray-100 rounded-lg p-1">
