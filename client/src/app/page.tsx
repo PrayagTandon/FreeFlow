@@ -550,17 +550,18 @@ export default function HomePage() {
       </section>
 
       {/* How It Works Section */}
-      <section className="px-32 my-24 border-4 border-red-600">
-        <div className="flex flex-col md:flex-row justify-between items-center mb-8">
-          <h2 className="text-3xl font-bold w-full text-center text-secondary-orange mb-4 md:mb-0">
-            How It Works <span className="text-primary-500">&gt;</span>
+      <section className="px-32 my-24 border-2 border-red-600">
+        {/* Heading and Button */}
+        <div className="relative flex flex-col md:flex-row justify-between items-center mb-8">
+          <h2 className="text-3xl font-bold w-full border-2 border-red-500 text-center text-secondary-orange mb-8">
+            How It Works &gt;
           </h2>
-          <div className="flex bg-gray-100 rounded-lg p-1">
+          <div className="absolute -top-[8%] right-0 flex rounded-lg p-2">
             <button
               className={`px-6 py-2 rounded-md font-medium transition-colors ${
                 howMode === "Client"
-                  ? "bg-white text-primary-600 shadow-sm"
-                  : "text-gray-600 hover:text-gray-900"
+                  ? "bg-secondary-orange text-primary-off-white shadow-md"
+                  : "bg-primary-off-white text-secondary-text-black"
               }`}
               onClick={() => {
                 setHowMode("Client");
@@ -572,8 +573,8 @@ export default function HomePage() {
             <button
               className={`px-6 py-2 rounded-md font-medium transition-colors ${
                 howMode === "Freelancer"
-                  ? "bg-white text-primary-600 shadow-sm"
-                  : "text-gray-600 hover:text-gray-900"
+                  ? "bg-secondary-orange text-primary-off-white shadow-md"
+                  : "bg-primary-off-white text-secondary-text-black"
               }`}
               onClick={() => {
                 setHowMode("Freelancer");
@@ -584,12 +585,12 @@ export default function HomePage() {
             </button>
           </div>
         </div>
-
+        {/* Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           {steps.map((step, idx) => (
             <div
               key={step.title}
-              className={`bg-white rounded-2xl shadow-md p-6 text-center cursor-pointer transition-all duration-200 hover:shadow-lg ${
+              className={`bg-primary-off-white rounded-2xl shadow-md p-6 text-center cursor-pointer transition-all duration-200 hover:shadow-lg ${
                 selectedStep === idx ? "ring-2 ring-primary-500 shadow-lg" : ""
               }`}
               onMouseEnter={() => setSelectedStep(idx)}
@@ -612,7 +613,7 @@ export default function HomePage() {
             </div>
           ))}
         </div>
-
+        {/* Selected Grid */}
         {selectedStep !== null && (
           <div className="bg-white rounded-2xl shadow-lg p-6 max-w-2xl mx-auto">
             <div className="flex items-center gap-4 mb-4">
