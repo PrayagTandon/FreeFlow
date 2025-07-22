@@ -522,7 +522,7 @@ export default function HomePage() {
               <div className="text-4xl mb-3" aria-hidden="true">
                 {prof.icon}
               </div>
-              <span className="font-semibold text-center">{prof.name}</span>
+              <span className="font-semibold text-center text-primary-blue">{prof.name}</span>
             </div>
           ))}
         </div>
@@ -720,7 +720,7 @@ export default function HomePage() {
 
       {/* FAQ Section */}
       <section className="px-32 my-24 rounded-2xl">
-        <div className="w-2/3 mx-auto py-16 rounded-xl bg-gradient-to-br from-primary-blue-light opacity-95 to-primary-blue-dark">
+        <div className="w-2/3 mx-auto py-16 rounded-xl bg-gradient-to-br from-primary-blue-light opacity-95 to-primary-blue-dark shadow-xl">
         {/* Heading */}
           <h2 className="text-3xl font-bold text-secondary-orange text-center mb-10">
           FAQs
@@ -756,17 +756,23 @@ export default function HomePage() {
       </section>
 
       {/* CTA Section */}
-      <section className="bg-gradient-to-r from-secondary-900 to-primary-500 mx-32 my-24 rounded-2xl p-12 text-center">
-        <h2 className="text-3xl font-bold text-white mb-6">
+      <section className="bg-gradient-to-br from-secondary-orange-light  to-secondary-orange-dark mx-32 my-24 rounded-2xl p-12 text-center shadow-xl">
+        <h2 className="text-3xl font-bold text-primary-off-white mb-10">
           Find The Right Freelancer For Your Project
         </h2>
-        <button className="bg-white text-secondary-900 px-8 py-4 rounded-xl font-bold text-lg hover:bg-primary-200 transition-colors">
+        <button
+          type="button" 
+          className="bg-primary-off-white text-primary-blue px-8  py-4 rounded-xl border-2 border-transparent font-bold text-lg 
+  hover:bg-white hover:border-primary-blue hover:text-primary-blue 
+  transform transition duration-200 ease-in-out 
+  hover:-translate-y-2 active:-translate-y-0">
           Explore Freelancers
         </button>
+
       </section>
 
       {/* Footer */}
-      <footer className="bg-gradient-to-br from-gray-900 to-gray-800 text-white">
+      <footer className="bg-gradient-to-br from-primary-blue-light to-primary-blue-dark text-primary-off-white mt-32">
         <div className="max-w-7xl mx-auto px-8 py-12">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div>

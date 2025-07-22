@@ -55,6 +55,8 @@ const config: Config = {
   				'950': '#2c0707',
 				'btn--hover': '#dfe0d0',
 				'orange': '#ff8600',
+				'orange-dark': '#e67900',
+				'orange-light': '#ff921a',
 				'text-black': '#1f1f1f'
   			},
   			muted: {
