@@ -450,7 +450,7 @@ export default function HomePage() {
           </p>
           <div className="w-1/3 bg-gradient-1 py-10 px-6 rounded-2xl p-2 shadow-lg">
             {/* Buttons */}
-            <div className="flex justify-center items-center mb-2">
+            <div className="flex justify-center items-center mb-3">
                 <button
                 type="button"
                 onClick={() => setSelectedRole("client")}
@@ -510,7 +510,7 @@ export default function HomePage() {
               className={`bg-white rounded-2xl shadow-md px-6 py-8 flex flex-col text-lg items-center cursor-pointer transition-all duration-200 hover:shadow-lg border-2 border-transparent hover:border-2 hover:border-secondary-orange ${
                 selectedProfession === idx
                   ? "bg-primary-blue text-primary-off-white shadow-lg border-2 border-secondary-orange"
-                  : "text-gray-700"
+                  : "text-primary-blue"
               }`}
               onClick={() => {
                 setSelectedProfession(idx);
@@ -550,10 +550,10 @@ export default function HomePage() {
       </section>
 
       {/* How It Works Section */}
-      <section className="px-32 my-24 border-2 border-red-600">
+      <section className="px-32 my-24">
         {/* Heading and Button */}
         <div className="relative flex flex-col md:flex-row justify-between items-center mb-8">
-          <h2 className="text-3xl font-bold w-full border-2 border-red-500 text-center text-secondary-orange mb-8">
+          <h2 className="text-3xl font-bold w-full text-center text-secondary-orange mb-8">
             How It Works &gt;
           </h2>
           <div className="absolute -top-[8%] right-0 flex rounded-lg p-2">
@@ -586,12 +586,12 @@ export default function HomePage() {
           </div>
         </div>
         {/* Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 mb-16">
           {steps.map((step, idx) => (
             <div
               key={step.title}
               className={`bg-primary-off-white rounded-2xl shadow-md p-6 text-center cursor-pointer transition-all duration-200 hover:shadow-lg ${
-                selectedStep === idx ? "ring-2 ring-primary-500 shadow-lg" : ""
+                selectedStep === idx ? "ring-2 ring-primary-blue shadow-lg" : ""
               }`}
               onMouseEnter={() => setSelectedStep(idx)}
               onClick={() => setSelectedStep(idx)}
@@ -606,7 +606,7 @@ export default function HomePage() {
                 {step.title}
               </div>
               {selectedStep === idx && (
-                <button className="bg-primary-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-primary-600 transition-colors">
+                <button className="bg-secondary-orange text-primary-off-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-primary-btn--hover transition-colors">
                   Learn More
                 </button>
               )}
@@ -618,11 +618,11 @@ export default function HomePage() {
           <div className="bg-white rounded-2xl shadow-lg p-6 max-w-2xl mx-auto">
             <div className="flex items-center gap-4 mb-4">
               <span className="text-3xl">{steps[selectedStep].icon}</span>
-              <span className="text-xl font-bold text-gray-900">
+              <span className="text-xl font-bold text-primary-blue">
                 {steps[selectedStep].title}
               </span>
             </div>
-            <p className="text-gray-700 text-left">
+            <p className="text-primary-text-darkgrey text-left">
               {steps[selectedStep].desc}
             </p>
           </div>
@@ -630,60 +630,66 @@ export default function HomePage() {
       </section>
 
       {/* Features Section */}
-      <section className="bg-gradient-to-br from-purple-50 to-blue-50 mx-8 my-16 rounded-2xl p-8">
-        <div className="text-center mb-12">
-          <span className="text-sm font-semibold text-primary-600 uppercase tracking-wide">
+      <section className="bg-primary-off-white px-32 py-12 my-24 rounded-2xl">
+        {/* Heading */}
+        <div className="text-center mb-16">
+          <span className="text-sm font-semibold text-secondary-orange uppercase tracking-wide">
             WHY CHOOSE US
           </span>
-          <h2 className="text-3xl font-bold text-gray-900 mt-2">
-            Designed For <span className="text-primary-600">Trust</span>. Built
-            For The Future Of <span className="text-primary-600">Work</span>.
+          <h2 className="text-3xl font-bold text-secondary-text-black mt-4">
+            Designed For <span className="text-secondary-orange">Trust.</span> Built
+            For The Future Of <span className="text-secondary-orange">Work.</span>
           </h2>
         </div>
-        <div className="space-y-8">
-          <div className="flex flex-col md:flex-row items-start gap-6">
+        {/* Content */}
+        <div className="grid grid-cols-4 md:grid-cols-3 sm:grid-cols-1 gap-x-12 gap-y-16">
+          {/* Item-1 */}
+          <div className="group flex flex-col items-center justify-center gap-6 py-4 px-6 bg-primary-blue border-2 border-transparent rounded-[1rem] hover:bg-white hover:border-2 hover:border-primary-blue hover:cursor-pointer transition-colors duration-200 shadow-md hover:shadow-lg">
             <div className="text-4xl flex-shrink-0">🤝</div>
-            <div className="flex-1">
-              <h3 className="text-xl font-bold text-gray-900 mb-2">
+            <div className="text-center">
+              <h3 className="text-xl font-bold text-primary-off-white mb-3 group-hover:text-primary-blue">
                 Trustless Smart Escrow
               </h3>
-              <p className="text-gray-700">
+              <p className="text-primary-text-lightgrey group-hover:text-secondary-text-black">
                 Payments are held securely in escrow and released only when both
                 parties are satisfied. No middlemen, no worries.
               </p>
             </div>
           </div>
-          <div className="flex flex-col md:flex-row items-start gap-6">
+          {/* Item-2 */}
+          <div className="group flex flex-col items-center justify-center gap-6 py-4 px-6 bg-primary-blue border-2 border-transparent rounded-[1rem] hover:bg-white hover:border-2 hover:border-primary-blue hover:cursor-pointer transition-colors duration-200 shadow-md hover:shadow-lg">
             <div className="text-4xl flex-shrink-0">💳</div>
-            <div className="flex-1">
-              <h3 className="text-xl font-bold text-gray-900 mb-2">
+            <div className="text-center">
+              <h3 className="text-xl font-bold text-primary-off-white mb-3 group-hover:text-primary-blue">
                 Crypto-Native Payments
               </h3>
-              <p className="text-gray-700">
+              <p className="text-primary-text-lightgrey group-hover:text-secondary-text-black">
                 Get paid instantly and globally with crypto. No waiting, no
                 borders, no hidden fees.
               </p>
             </div>
           </div>
-          <div className="flex flex-col md:flex-row items-start gap-6">
+          {/* Item-3 */}
+          <div className="group flex flex-col items-center justify-center gap-6 py-4 px-6 bg-primary-blue border-2 border-transparent rounded-[1rem] hover:bg-white hover:border-2 hover:border-primary-blue hover:cursor-pointer transition-colors duration-200 shadow-md hover:shadow-lg">
             <div className="text-4xl flex-shrink-0">🌟</div>
-            <div className="flex-1">
-              <h3 className="text-xl font-bold text-gray-900 mb-2">
+            <div className="text-center">
+              <h3 className="text-xl font-bold text-primary-off-white mb-3 group-hover:text-primary-blue">
                 On-Chain Reputation
               </h3>
-              <p className="text-gray-700">
+              <p className="text-primary-text-lightgrey group-hover:text-secondary-text-black">
                 Your work history and reviews are stored on-chain, making your
                 reputation portable and verifiable anywhere.
               </p>
             </div>
           </div>
-          <div className="flex flex-col md:flex-row items-start gap-6">
+          {/* Item-4 */}
+          <div className="group flex flex-col items-center justify-center gap-6 py-4 px-6 bg-primary-blue border-2 border-transparent rounded-[1rem] hover:bg-white hover:border-2 hover:border-primary-blue hover:cursor-pointer transition-colors duration-200 shadow-md hover:shadow-lg">
             <div className="text-4xl flex-shrink-0">📜</div>
-            <div className="flex-1">
-              <h3 className="text-xl font-bold text-gray-900 mb-2">
+            <div className="text-center">
+              <h3 className="text-xl font-bold text-primary-off-white mb-3 group-hover:text-primary-blue">
                 Verifiable Work History
               </h3>
-              <p className="text-gray-700">
+              <p className="text-primary-text-lightgrey group-hover:text-secondary-text-black">
                 Every project and review is recorded, giving you a transparent
                 and trustworthy work portfolio.
               </p>
