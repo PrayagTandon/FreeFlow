@@ -34,6 +34,8 @@ const config: Config = {
   				'950': '#000000',
 				'btn--hover': '#e67900',
 				'blue': '#27187e',
+				'blue-dark': '#231671',
+				'blue-light': '#3d2f8b',
 				'off-white': '#f8f9e7',
 				'text-darkgrey': '#8c8c8c',
 				'text-lightgrey': '#d9d9d9',

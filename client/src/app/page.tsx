@@ -642,54 +642,74 @@ export default function HomePage() {
           </h2>
         </div>
         {/* Content */}
-        <div className="grid grid-cols-4 md:grid-cols-3 sm:grid-cols-1 gap-x-12 gap-y-16">
+        <div className="grid grid-cols-4 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-x-12 gap-y-16">
           {/* Item-1 */}
-          <div className="group flex flex-col items-center justify-center gap-6 py-4 px-6 bg-primary-blue border-2 border-transparent rounded-[1rem] hover:bg-white hover:border-2 hover:border-primary-blue hover:cursor-pointer transition-colors duration-200 shadow-md hover:shadow-lg">
-            <div className="text-4xl flex-shrink-0">🤝</div>
-            <div className="text-center">
-              <h3 className="text-xl font-bold text-primary-off-white mb-3 group-hover:text-primary-blue">
+          <div className="group relative flex flex-col items-center justify-center gap-6 py-4 px-6 bg-primary-blue border-2 border-transparent rounded-[1rem] overflow-hidden cursor-pointer shadow-md transition-all duration-300 hover:shadow-lg hover:border-primary-blue">
+
+            {/* Overlay effect */}
+            <div className="absolute inset-0 bg-primary-off-white transform -translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-in-out z-0"></div>
+
+            {/* Content */}
+            <div className="relative z-10 text-4xl flex-shrink-0">🤝</div>
+            <div className="relative z-10 text-center">
+              <h3 className="text-xl font-bold text-primary-off-white mb-3 group-hover:text-primary-blue transition-colors duration-300">
                 Trustless Smart Escrow
               </h3>
-              <p className="text-primary-text-lightgrey group-hover:text-secondary-text-black">
+              <p className="text-primary-text-lightgrey group-hover:text-secondary-text-black transition-colors duration-300">
                 Payments are held securely in escrow and released only when both
                 parties are satisfied. No middlemen, no worries.
               </p>
             </div>
           </div>
           {/* Item-2 */}
-          <div className="group flex flex-col items-center justify-center gap-6 py-4 px-6 bg-primary-blue border-2 border-transparent rounded-[1rem] hover:bg-white hover:border-2 hover:border-primary-blue hover:cursor-pointer transition-colors duration-200 shadow-md hover:shadow-lg">
-            <div className="text-4xl flex-shrink-0">💳</div>
-            <div className="text-center">
-              <h3 className="text-xl font-bold text-primary-off-white mb-3 group-hover:text-primary-blue">
+          <div className="group relative flex flex-col items-center justify-center gap-6 py-4 px-6 bg-primary-blue border-2 border-transparent rounded-[1rem] overflow-hidden cursor-pointer shadow-md transition-all duration-300 hover:shadow-lg hover:border-primary-blue">
+
+            {/* Overlay effect */}
+            <div className="absolute inset-0 bg-primary-off-white transform -translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-in-out z-0"></div>
+
+            {/* Content */}
+            <div className="relative z-10 text-4xl flex-shrink-0">💳</div>
+            <div className="relative z-10 text-center">
+              <h3 className="text-xl font-bold text-primary-off-white mb-3 group-hover:text-primary-blue transition-colors duration-300">
                 Crypto-Native Payments
               </h3>
-              <p className="text-primary-text-lightgrey group-hover:text-secondary-text-black">
+              <p className="text-primary-text-lightgrey group-hover:text-secondary-text-black transition-colors duration-300">
                 Get paid instantly and globally with crypto. No waiting, no
                 borders, no hidden fees.
               </p>
             </div>
           </div>
           {/* Item-3 */}
-          <div className="group flex flex-col items-center justify-center gap-6 py-4 px-6 bg-primary-blue border-2 border-transparent rounded-[1rem] hover:bg-white hover:border-2 hover:border-primary-blue hover:cursor-pointer transition-colors duration-200 shadow-md hover:shadow-lg">
-            <div className="text-4xl flex-shrink-0">🌟</div>
-            <div className="text-center">
-              <h3 className="text-xl font-bold text-primary-off-white mb-3 group-hover:text-primary-blue">
+          <div className="group relative flex flex-col items-center justify-center gap-6 py-4 px-6 bg-primary-blue border-2 border-transparent rounded-[1rem] overflow-hidden cursor-pointer shadow-md transition-all duration-300 hover:shadow-lg hover:border-primary-blue">
+
+            {/* Overlay effect */}
+            <div className="absolute inset-0 bg-primary-off-white transform -translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-in-out z-0"></div>
+
+            {/* Content */}
+            <div className="relative z-10 text-4xl flex-shrink-0">🌟</div>
+            <div className="relative z-10 text-center">
+              <h3 className="text-xl font-bold text-primary-off-white mb-3 group-hover:text-primary-blue transition-colors duration-300">
                 On-Chain Reputation
               </h3>
-              <p className="text-primary-text-lightgrey group-hover:text-secondary-text-black">
+              <p className="text-primary-text-lightgrey group-hover:text-secondary-text-black transition-colors duration-300">
                 Your work history and reviews are stored on-chain, making your
                 reputation portable and verifiable anywhere.
               </p>
             </div>
           </div>
           {/* Item-4 */}
-          <div className="group flex flex-col items-center justify-center gap-6 py-4 px-6 bg-primary-blue border-2 border-transparent rounded-[1rem] hover:bg-white hover:border-2 hover:border-primary-blue hover:cursor-pointer transition-colors duration-200 shadow-md hover:shadow-lg">
-            <div className="text-4xl flex-shrink-0">📜</div>
-            <div className="text-center">
-              <h3 className="text-xl font-bold text-primary-off-white mb-3 group-hover:text-primary-blue">
+          <div className="group col-[2/3] relative flex flex-col items-center justify-center gap-6 py-4 px-6 bg-primary-blue border-2 border-transparent rounded-[1rem] overflow-hidden cursor-pointer shadow-md transition-all duration-300 hover:shadow-lg hover:border-primary-blue">
+
+            {/* Overlay effect */}
+            <div className="absolute inset-0 bg-primary-off-white transform -translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-in-out z-0"></div>
+
+            {/* Content */}
+            <div className="relative z-10 text-4xl flex-shrink-0">📜</div>
+            <div className="relative z-10 text-center">
+              <h3 className="text-xl font-bold text-primary-off-white mb-3 group-hover:text-primary-blue transition-colors duration-300">
                 Verifiable Work History
               </h3>
-              <p className="text-primary-text-lightgrey group-hover:text-secondary-text-black">
+              <p className="text-primary-text-lightgrey group-hover:text-secondary-text-black transition-colors duration-300">
                 Every project and review is recorded, giving you a transparent
                 and trustworthy work portfolio.
               </p>
@@ -699,16 +719,19 @@ export default function HomePage() {
       </section>
 
       {/* FAQ Section */}
-      <section className="bg-gradient-to-br from-gray-50 to-blue-50 mx-8 my-16 rounded-2xl p-8">
-        <h2 className="text-3xl font-bold text-gray-900 text-center mb-8">
+      <section className="px-32 my-24 rounded-2xl">
+        <div className="w-2/3 mx-auto py-16 rounded-xl bg-gradient-to-br from-primary-blue-light opacity-95 to-primary-blue-dark">
+        {/* Heading */}
+          <h2 className="text-3xl font-bold text-secondary-orange text-center mb-10">
           FAQs
-        </h2>
-        <div className="max-w-3xl mx-auto space-y-4">
+          </h2>
+          {/* Content */}
+          <div className="max-w-3xl mx-auto space-y-6">
           {faqData.map((faq, idx) => (
             <details
               key={faq.q}
-              className={`bg-white rounded-xl shadow-md overflow-hidden ${
-                faqOpen.includes(idx) ? "ring-2 ring-primary-500" : ""
+              className={`bg-primary-off-white rounded-xl shadow-md overflow-hidden ${
+                faqOpen.includes(idx) ? "ring-2 ring-secondary-orange" : ""
               }`}
               open={faqOpen.includes(idx)}
               onClick={(e) => {
@@ -720,19 +743,20 @@ export default function HomePage() {
                 );
               }}
             >
-              <summary className="px-6 py-4 cursor-pointer font-semibold text-gray-900 hover:bg-gray-50 transition-colors">
+              <summary className="px-6 py-4 cursor-pointer font-semibold text-secondary-text-black transition-colors">
                 {faq.q}
               </summary>
-              <div className="px-6 pb-4 text-gray-700">
+              <div className="px-6 pb-4 text-gray-800">
                 <p>{faq.a}</p>
               </div>
             </details>
           ))}
+          </div>
         </div>
       </section>
 
       {/* CTA Section */}
-      <section className="bg-gradient-to-r from-secondary-900 to-primary-500 mx-8 my-16 rounded-2xl p-12 text-center">
+      <section className="bg-gradient-to-r from-secondary-900 to-primary-500 mx-32 my-24 rounded-2xl p-12 text-center">
         <h2 className="text-3xl font-bold text-white mb-6">
           Find The Right Freelancer For Your Project
         </h2>
