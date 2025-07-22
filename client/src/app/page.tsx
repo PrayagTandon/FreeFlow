@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { FaSearch } from "react-icons/fa";
+import GoToTop from "./components/GoToTop";
 
 const professionData = [
   {
@@ -110,12 +111,12 @@ export default function HomePage() {
   const [contactOpen, setContactOpen] = useState(false);
   const [resourcesOpen, setResourcesOpen] = useState(false);
   const [howModalOpen, setHowModalOpen] = useState(false);
-   const [selectedRole, setSelectedRole] = useState("freelancer"); 
+  const [selectedRole, setSelectedRole] = useState("freelancer");
 
   const steps = howMode === "Client" ? howItWorksClient : howItWorksFreelancer;
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-primary-bg-light">
       {/* How It Works Modal */}
       {howModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
@@ -761,7 +762,8 @@ export default function HomePage() {
           Find The Right Freelancer For Your Project
         </h2>
         <button
-          type="button" 
+          type="button"
+ 
           className="bg-primary-off-white text-primary-blue px-8  py-4 rounded-xl border-2 border-transparent font-bold text-lg 
   hover:bg-white hover:border-primary-blue hover:text-primary-blue 
   transform transition duration-200 ease-in-out 
@@ -873,6 +875,8 @@ export default function HomePage() {
           </div>
         </div>
       </footer>
+
+      <GoToTop />
     </div>
   );
-}
+}  

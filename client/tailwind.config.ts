@@ -39,6 +39,7 @@ const config: Config = {
 				'off-white': '#f8f9e7',
 				'text-darkgrey': '#8c8c8c',
 				'text-lightgrey': '#d9d9d9',
+				'bg-light': '#f5f5f5'
 				
   			},
   			secondary: {
