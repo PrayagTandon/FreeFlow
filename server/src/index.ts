@@ -5,6 +5,21 @@ import cors from 'cors';
 
 dotenv.config();
 
+import { PrismaClient } from '@prisma/client';
+const prisma = new PrismaClient();
+
+async function testConnection() {
+  try {
+    const users = await prisma.freelancer.findMany();
+    console.log('Connected to Neon DB. Freelancers:', users);
+  } catch (err) {
+    console.error('❌ Failed to connect to DB:', err);
+  }
+}
+
+testConnection();
+
+
 const app = express();
 const PORT = process.env.PORT || 5000;
 
