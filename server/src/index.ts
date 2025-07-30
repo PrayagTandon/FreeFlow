@@ -1,11 +1,10 @@
-// src/index.ts
 import dotenv from 'dotenv';
 import express from 'express';
 import cors from 'cors';
 
 dotenv.config();
 
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '../generated/prisma';
 const prisma = new PrismaClient();
 
 async function testConnection() {
