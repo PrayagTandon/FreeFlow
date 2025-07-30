@@ -4,11 +4,9 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 export default function Register() {
-  const [role, setRole] = useState("Freelancer");
+  const [name, setName] = useState("");
   const [wallet, setWallet] = useState("");
   const [connecting, setConnecting] = useState(false);
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -37,15 +35,8 @@ export default function Register() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
-    if (
-      !firstName ||
-      !lastName ||
-      !email ||
-      !password ||
-      !confirmPassword ||
-      !wallet
-    ) {
-      setError("All fields including wallet are required.");
+    if (!name || !email || !password || !confirmPassword) {
+      setError("Name, email, and password are required.");
       return;
     }
     if (password !== confirmPassword) {
@@ -58,17 +49,17 @@ export default function Register() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          name,
           email,
           password,
           metamaskId: wallet,
-          // Optionally send firstName, lastName, role if backend supports
         }),
       });
       const data = await res.json();
       if (!res.ok) {
         setError(data.message || "Registration failed");
       } else {
-        // Registration successful, redirect to login or freelancer-home
+        // Registration successful, redirect to login
         router.push("/login");
       }
     } catch (err) {
@@ -84,26 +75,15 @@ export default function Register() {
           SignUp for a Free Account
         </h1>
         <form className="space-y-6" onSubmit={handleSubmit}>
-          <div className="grid grid-cols-2 gap-4">
-            <input
-              type="text"
-              name="firstName"
-              placeholder="First Name"
-              className="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-colors"
-              required
-              value={firstName}
-              onChange={(e) => setFirstName(e.target.value)}
-            />
-            <input
-              type="text"
-              name="lastName"
-              placeholder="Last Name"
-              className="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-colors"
-              required
-              value={lastName}
-              onChange={(e) => setLastName(e.target.value)}
-            />
-          </div>
+          <input
+            type="text"
+            name="name"
+            placeholder="Full Name"
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-colors"
+            required
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
           <input
             type="email"
             name="email"
@@ -132,37 +112,14 @@ export default function Register() {
             onChange={(e) => setConfirmPassword(e.target.value)}
           />
 
-          <div className="flex items-center gap-6">
-            <label className="font-medium text-gray-700">Role:</label>
-            <label className="flex items-center gap-2">
-              <input
-                type="radio"
-                name="role"
-                value="Client"
-                checked={role === "Client"}
-                onChange={() => setRole("Client")}
-                className="text-primary-600 focus:ring-primary-500"
-              />
-              Client
-            </label>
-            <label className="flex items-center gap-2">
-              <input
-                type="radio"
-                name="role"
-                value="Freelancer"
-                checked={role === "Freelancer"}
-                onChange={() => setRole("Freelancer")}
-                className="text-primary-600 focus:ring-primary-500"
-              />
-              Freelancer
-            </label>
-          </div>
-
           <div className="space-y-3">
+            <label className="block text-sm font-medium text-gray-700">
+              Metamask Wallet (Optional)
+            </label>
             <input
               type="text"
               name="wallet"
-              placeholder="Metamask Wallet ID"
+              placeholder="Connect your wallet (optional)"
               className="w-full px-4 py-3 border border-gray-300 rounded-lg bg-gray-50"
               value={wallet}
               readOnly

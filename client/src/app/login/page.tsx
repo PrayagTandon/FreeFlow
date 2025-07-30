@@ -32,8 +32,8 @@ export default function Login() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
-    if (!email || !password || !wallet) {
-      setError("All fields including wallet are required.");
+    if (!email || !password) {
+      setError("Email and password are required.");
       return;
     }
     setLoading(true);
@@ -41,21 +41,17 @@ export default function Login() {
       const res = await fetch("http://localhost:5000/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password, metamaskId: wallet }),
+        body: JSON.stringify({ email, password }),
       });
       const data = await res.json();
       if (!res.ok) {
         setError(data.message || "Login failed");
       } else {
-        // Store token and user info in localStorage
+        // Store token and freelancer info in localStorage
         localStorage.setItem("token", data.token);
-        localStorage.setItem("user", JSON.stringify(data.user));
-        // Redirect based on role
-        if (data.user.role === "freelancer") {
-          router.push("/freelancer-home");
-        } else {
-          router.push("/dashboard");
-        }
+        localStorage.setItem("freelancer", JSON.stringify(data.freelancer));
+        // Redirect to freelancer home
+        router.push("/freelancer-home");
       }
     } catch (err) {
       setError("Something went wrong. Please try again.");
@@ -108,13 +104,13 @@ export default function Login() {
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Metamask Wallet
+              Metamask Wallet (Optional)
             </label>
             <div className="flex gap-2">
               <input
                 type="text"
                 name="wallet"
-                placeholder="Metamask Wallet ID"
+                placeholder="Connect your wallet (optional)"
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg bg-gray-50"
                 value={wallet}
                 readOnly
@@ -134,7 +130,7 @@ export default function Login() {
             className="w-full bg-primary-500 text-white py-3 rounded-lg font-semibold hover:bg-primary-600 transition-colors"
             disabled={loading}
           >
-            {loading ? "Logging in..." : "Log In with Email"}
+            {loading ? "Logging in..." : "Log In"}
           </button>
         </form>
         <div className="text-center my-6">

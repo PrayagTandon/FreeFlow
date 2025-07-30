@@ -34,13 +34,12 @@ const jobs = [
 ];
 
 export default function FreelancerHome() {
-  const [user, setUser] = useState<{
-    id?: string;
+  const [freelancer, setFreelancer] = useState<{
+    id?: number;
+    cognitoId?: string;
+    name?: string;
     email?: string;
     metamaskId?: string;
-    role?: string;
-    firstName?: string;
-    lastName?: string;
   } | null>(null);
   const [hoveredArc, setHoveredArc] = useState<number | null>(null);
   const trustScore = 100;
@@ -54,26 +53,22 @@ export default function FreelancerHome() {
   const router = useRouter();
 
   useEffect(() => {
-    // Get user from localStorage
-    const userStr =
-      typeof window !== "undefined" ? localStorage.getItem("user") : null;
-    if (!userStr) {
+    // Get freelancer from localStorage
+    const freelancerStr =
+      typeof window !== "undefined" ? localStorage.getItem("freelancer") : null;
+    if (!freelancerStr) {
       router.push("/login");
       return;
     }
     try {
-      const userObj = JSON.parse(userStr);
-      if (userObj.role !== "freelancer") {
-        router.push("/dashboard");
-        return;
-      }
-      setUser(userObj);
+      const freelancerObj = JSON.parse(freelancerStr);
+      setFreelancer(freelancerObj);
     } catch {
       router.push("/login");
     }
   }, [router]);
 
-  if (!user) {
+  if (!freelancer) {
     return null; // or a loading spinner
   }
 
@@ -127,18 +122,22 @@ export default function FreelancerHome() {
         <div className="bg-white rounded-2xl shadow-lg p-6 mb-8 flex flex-col md:flex-row gap-8 items-center">
           <div className="flex flex-col gap-2">
             <div className="text-lg font-bold text-gray-900">
-              Welcome, Freelancer!
+              Welcome, {freelancer.name || "Freelancer"}!
             </div>
             <div className="text-gray-700">
-              <b>Email:</b> {user.email}
+              <b>Email:</b> {freelancer.email}
             </div>
             <div className="text-gray-700">
-              <b>Wallet:</b> {user.metamaskId}
+              <b>Wallet:</b> {freelancer.metamaskId || "Not connected"}
             </div>
             <div className="text-gray-700">
-              <b>Role:</b> {user.role}
+              <b>Freelancer ID:</b> {freelancer.id}
             </div>
-            {/* Add more user fields here if available */}
+            {freelancer.cognitoId && (
+              <div className="text-gray-700">
+                <b>Cognito ID:</b> {freelancer.cognitoId}
+              </div>
+            )}
           </div>
         </div>
 
@@ -329,14 +328,10 @@ export default function FreelancerHome() {
             <div className="bg-white rounded-2xl shadow-lg p-6 text-center">
               <div className="text-4xl mb-4">🧑‍💻</div>
               <div className="font-semibold text-gray-900 mb-2">
-                {user.firstName || user.lastName
-                  ? `${user.firstName || ""} ${user.lastName || ""}`.trim()
-                  : user.email
-                  ? user.email.split("@")[0]
-                  : "N/A"}
+                {freelancer.name || "Freelancer"}
               </div>
               <div className="text-gray-600 mb-4">
-                {user.metamaskId || "N/A"}
+                {freelancer.metamaskId || "N/A"}
               </div>
               <button className="bg-primary-500 text-white px-6 py-2 rounded-lg font-medium hover:bg-primary-600 transition-colors">
                 Upgrade your Profile

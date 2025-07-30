@@ -13,3 +13,14 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model Freelancer {
+  id         Int      @id @default(autoincrement()) @map("ID")
+  cognitoId  String?  @unique @map("CognitoID") @db.VarChar(100)
+  name       String   @map("Name") @db.VarChar(100)
+  email      String   @unique @map("Email") @db.VarChar(100)
+  password   String   @map("Password") @db.VarChar(100)
+  metamaskId String?  @unique @map("MetamaskID") @db.VarChar(100)
+
+  @@map("Freelancer")
+}
