@@ -1,57 +1,51 @@
-const express = require('express');
-const router = express.Router();
-// Removed pool import since we're using Prisma
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-const { PrismaClient } = require('../../../generated/prisma');
+import express from 'express';
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+import { PrismaClient } from '../../generated/prisma';
 
 const prisma = new PrismaClient();
+const router = express.Router();
 
-// @route   POST /api/auth/register
-// @desc    Register freelancer
+// Register Route
 router.post('/register', async (req, res) => {
     const { name, email, password, metamaskId, cognitoId } = req.body;
     if (!email || !password || !name) {
         return res.status(400).json({ message: 'Name, email, and password are required.' });
     }
     try {
-        // Check if freelancer already exists using Prisma
         const existingFreelancer = await prisma.freelancer.findFirst({
             where: {
                 OR: [
-                    { email: email },
-                    { metamaskId: metamaskId }
+                    { email },
+                    { metamaskid: metamaskId }
                 ]
             }
         });
 
         if (existingFreelancer) {
-            return res.status(400).json({ message: 'Freelancer with this email or metamaskId already exists.' });
+            return res.status(400).json({ message: 'Freelancer already exists.' });
         }
 
-        // Hash password
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
 
-        // Insert new freelancer using Prisma
         const newFreelancer = await prisma.freelancer.create({
             data: {
-                name: name,
-                email: email,
+                name,
+                email,
                 password: hashedPassword,
-                metamaskId: metamaskId,
-                cognitoId: cognitoId
+                metamaskid: metamaskId,
+                cognitoid: cognitoId
             },
             select: {
                 id: true,
                 name: true,
                 email: true,
-                metamaskId: true,
-                cognitoId: true
+                metamaskid: true,
+                cognitoid: true
             }
         });
 
-        // Respond with new freelancer info (excluding password)
         res.status(201).json(newFreelancer);
     } catch (err) {
         console.error(err);
@@ -59,37 +53,25 @@ router.post('/register', async (req, res) => {
     }
 });
 
-// @route   POST /api/auth/login
-// @desc    Login freelancer
+// Login Route
 router.post('/login', async (req, res) => {
     const { email, password } = req.body;
     if (!email || !password) {
         return res.status(400).json({ message: 'Email and password are required.' });
     }
     try {
-        // Find freelancer using Prisma
-        const freelancer = await prisma.freelancer.findUnique({
-            where: { email: email }
-        });
-
-        if (!freelancer) {
+        const freelancer = await prisma.freelancer.findUnique({ where: { email } });
+        if (!freelancer || !(await bcrypt.compare(password, freelancer.password))) {
             return res.status(400).json({ message: 'Invalid credentials.' });
         }
 
-        // Compare password
-        const isMatch = await bcrypt.compare(password, freelancer.password);
-        if (!isMatch) {
-            return res.status(400).json({ message: 'Invalid credentials.' });
-        }
-
-        // Create JWT
         const token = jwt.sign(
             {
                 id: freelancer.id,
                 email: freelancer.email,
                 name: freelancer.name
             },
-            process.env.JWT_SECRET,
+            process.env.JWT_SECRET!,
             { expiresIn: '1d' }
         );
 
@@ -99,8 +81,8 @@ router.post('/login', async (req, res) => {
                 id: freelancer.id,
                 name: freelancer.name,
                 email: freelancer.email,
-                metamaskId: freelancer.metamaskId,
-                cognitoId: freelancer.cognitoId
+                metamaskId: freelancer.metamaskid,
+                cognitoId: freelancer.cognitoid
             }
         });
     } catch (err) {
@@ -109,4 +91,4 @@ router.post('/login', async (req, res) => {
     }
 });
 
-module.exports = router; 
+export default router;
