@@ -1,0 +1,244 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model client {
+  id            Int             @id @default(autoincrement())
+  cognitoid     String          @unique @db.VarChar(100)
+  name          String          @db.VarChar(100)
+  email         String          @unique @db.VarChar(100)
+  password      String?         @db.VarChar(100)
+  metamaskid    String?         @unique @db.VarChar(100)
+  jobposted     jobposted[]
+  smartcontract smartcontract[]
+}
+
+model disputes {
+  id            Int             @id @default(autoincrement())
+  contractid    Int?
+  milestoneid   Int?
+  raisedby      Int
+  againstuserid Int
+  description   String?
+  status        dispute_status? @default(open)
+  resolution    String?
+  resolutionby  Int?
+  evidenceurls  String[]
+  createdat     DateTime?       @default(now()) @db.Timestamp(6)
+  resolvedat    DateTime?       @db.Timestamp(6)
+  smartcontract smartcontract?  @relation(fields: [contractid], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  milestones    milestones?     @relation(fields: [milestoneid], references: [id], onUpdate: NoAction)
+}
+
+model freelancer {
+  id             Int              @id @default(autoincrement())
+  cognitoid      String           @unique @db.VarChar(100)
+  name           String           @db.VarChar(100)
+  email          String           @unique @db.VarChar(100)
+  password       String           @db.VarChar(100)
+  metamaskid     String?          @unique @db.VarChar(100)
+  milestones     milestones[]
+  nftcredential  nftcredential[]
+  paymentsescrow paymentsescrow[]
+  proposals      proposals[]
+  smartcontract  smartcontract[]
+}
+
+model jobposted {
+  id                      Int             @id @default(autoincrement())
+  clientid                Int?
+  name                    String          @db.VarChar(255)
+  description             String
+  tags                    String[]
+  location                String?         @db.VarChar(100)
+  joblevel                String?         @db.VarChar(50)
+  budget                  Int?
+  contracttohire          Boolean?
+  qualificationspreferred String?
+  postingtime             DateTime?       @db.Time(6)
+  postingdate             DateTime?       @db.Date
+  validtill               DateTime?       @db.Date
+  companyname             String?         @db.VarChar(100)
+  customizable            Boolean?        @default(false)
+  photourls               String[]
+  client                  client?         @relation(fields: [clientid], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  message                 message[]
+  milestones              milestones[]
+  nftcredential           nftcredential[]
+  proposals               proposals[]
+  smartcontract           smartcontract[]
+}
+
+model message {
+  id            Int           @id @default(autoincrement())
+  senderid      Int
+  receiverid    Int
+  jobid         Int?
+  messagetext   String?
+  messagetype   message_type? @default(text)
+  attachmenturl String?       @db.VarChar(255)
+  timestamp     DateTime?     @default(now()) @db.Timestamp(6)
+  isread        Boolean?      @default(false)
+  issystem      Boolean?      @default(false)
+  jobposted     jobposted?    @relation(fields: [jobid], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model milestones {
+  id             Int               @id @default(autoincrement())
+  jobid          Int?
+  freelancerid   Int?
+  title          String            @db.VarChar(255)
+  description    String?
+  duedate        DateTime?         @db.Timestamp(6)
+  amount         Int
+  status         milestone_status? @default(pending)
+  disputes       disputes[]
+  freelancer     freelancer?       @relation(fields: [freelancerid], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  jobposted      jobposted?        @relation(fields: [jobid], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  paymentsescrow paymentsescrow[]
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model nftcredential {
+  id           Int         @id @default(autoincrement())
+  freelancerid Int?
+  jobid        Int?
+  tokenid      Int?        @unique
+  rating       Int?
+  testimonial  String?
+  isminted     Boolean?    @default(false)
+  txhash       String?     @db.VarChar(255)
+  createdat    DateTime?   @default(now()) @db.Timestamp(6)
+  freelancer   freelancer? @relation(fields: [freelancerid], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  jobposted    jobposted?  @relation(fields: [jobid], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model paymentsescrow {
+  id            Int             @id @default(autoincrement())
+  contractid    Int?
+  milestoneid   Int?
+  type          payment_type
+  status        payment_status? @default(pending)
+  paymentmethod payment_method?
+  txhash        String?         @db.VarChar(255)
+  amount        Int
+  initiatedby   Int?
+  receiverid    Int?
+  notes         String?
+  timestamp     DateTime?       @default(now()) @db.Timestamp(6)
+  confirmedat   DateTime?       @db.Timestamp(6)
+  smartcontract smartcontract?  @relation(fields: [contractid], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  milestones    milestones?     @relation(fields: [milestoneid], references: [id], onUpdate: NoAction)
+  freelancer    freelancer?     @relation(fields: [receiverid], references: [id], onUpdate: NoAction)
+}
+
+model proposals {
+  id               Int              @id @default(autoincrement())
+  jobid            Int?
+  freelancerid     Int?
+  coverletter      String?
+  budgetquoted     Int?
+  proposedtimeline String?          @db.VarChar(100)
+  status           proposal_status? @default(pending)
+  submittedat      DateTime?        @default(now()) @db.Timestamp(6)
+  freelancer       freelancer?      @relation(fields: [freelancerid], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  jobposted        jobposted?       @relation(fields: [jobid], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model smartcontract {
+  id                   Int              @id @default(autoincrement())
+  jobid                Int?
+  freelancerid         Int?
+  clientid             Int?
+  startdate            DateTime         @db.Timestamp(6)
+  enddate              DateTime?        @db.Timestamp(6)
+  escrowamount         Int
+  smartcontractaddress String?          @unique @db.VarChar(255)
+  isactive             Boolean?         @default(true)
+  iscompleted          Boolean?         @default(false)
+  isdisputed           Boolean?         @default(false)
+  platformfee          Int?             @default(0)
+  paymentmethod        String?          @db.VarChar(50)
+  terminationreason    String?
+  createdat            DateTime?        @default(now()) @db.Timestamp(6)
+  updatedat            DateTime?        @default(now()) @db.Timestamp(6)
+  disputes             disputes[]
+  paymentsescrow       paymentsescrow[]
+  client               client?          @relation(fields: [clientid], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  freelancer           freelancer?      @relation(fields: [freelancerid], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  jobposted            jobposted?       @relation(fields: [jobid], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model staking {
+  id           Int            @id @default(autoincrement())
+  userid       Int
+  stakeamount  Int
+  stakepurpose stake_purpose? @default(governance)
+  trustscore   Float?
+  resumescore  Int?
+  isvalidator  Boolean?       @default(false)
+  startdate    DateTime?      @default(now()) @db.Timestamp(6)
+  enddate      DateTime?      @db.Timestamp(6)
+  active       Boolean?       @default(true)
+}
+
+enum dispute_status {
+  open
+  under_review
+  resolved
+  rejected
+}
+
+enum message_type {
+  text
+  file
+  system
+}
+
+enum milestone_status {
+  pending
+  in_progress
+  completed
+  approved
+  disputed
+}
+
+enum payment_method {
+  Crypto
+  Stripe
+  Wallet
+  BankTransfer
+}
+
+enum payment_status {
+  pending
+  completed
+  failed
+  refunded
+}
+
+enum payment_type {
+  milestone
+  full
+  partial
+  refund
+}
+
+enum proposal_status {
+  pending
+  accepted
+  rejected
+}
+
+enum stake_purpose {
+  governance
+  moderation
+  reputation
+}
