@@ -13,7 +13,7 @@ app.use(cors({
 app.use(express.json());
 
 // Placeholder for auth routes
-app.use('/api/auth', require('./routes/auth'));
+app.use('/api/auth', require('./src/routes/auth'));
 
 app.get('/', (req, res) => {
     res.send('API is running');
