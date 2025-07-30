@@ -20,6 +20,7 @@ app.use(express.json());
 import authRoutes from './routes/auth';
 app.use('/api/auth', authRoutes);
 
+// Get routes
 app.get('/', (_, res) => {
     res.send('API is running');
 });

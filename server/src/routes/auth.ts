@@ -6,7 +6,6 @@ import { PrismaClient } from '../../generated/prisma';
 const prisma = new PrismaClient();
 const router = express.Router();
 
-// Register Route
 router.post('/register', async (req, res) => {
     const { name, email, password, metamaskId, cognitoId } = req.body;
     if (!email || !password || !name) {
