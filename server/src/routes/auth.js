@@ -3,7 +3,7 @@ const router = express.Router();
 // Removed pool import since we're using Prisma
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const { PrismaClient } = require('@prisma/client');
+const { PrismaClient } = require('../../../generated/prisma');
 
 const prisma = new PrismaClient();
 
