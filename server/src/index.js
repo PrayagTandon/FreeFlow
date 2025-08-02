@@ -4,7 +4,7 @@ import cors from 'cors';
 
 dotenv.config();
 
-import { PrismaClient } from '../generated/prisma';
+import { PrismaClient } from '../generated/prisma/index.js';
 const prisma = new PrismaClient();
 
 async function testConnection() {
@@ -18,7 +18,6 @@ async function testConnection() {
 
 testConnection();
 
-
 const app = express();
 const PORT = process.env.PORT || 5000;
 
@@ -31,7 +30,7 @@ app.use(cors({
 app.use(express.json());
 
 // Import routes
-import authRoutes from './routes/auth';
+import authRoutes from './routes/auth.js';
 app.use('/api/auth', authRoutes);
 
 // Get routes
@@ -41,4 +40,4 @@ app.get('/', (_, res) => {
 
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
-});
+}); 

@@ -1,7 +1,7 @@
 import express from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import { PrismaClient } from '../../generated/prisma';
+import { PrismaClient } from '../../generated/prisma/index.js';
 
 const prisma = new PrismaClient();
 const router = express.Router();
@@ -70,7 +70,7 @@ router.post('/login', async (req, res) => {
                 email: freelancer.email,
                 name: freelancer.name
             },
-            process.env.JWT_SECRET!,
+            process.env.JWT_SECRET,
             { expiresIn: '1d' }
         );
 
@@ -90,4 +90,4 @@ router.post('/login', async (req, res) => {
     }
 });
 
-export default router;
+export default router; 
