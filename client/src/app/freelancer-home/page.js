@@ -2,6 +2,8 @@
 import '../home.css';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
+import Link from 'next/link';
 
 const trustBreakdown = [
   { color: '#FFB23F', label: 'Default Trust', percent: 20 },
@@ -188,10 +190,10 @@ export default function FreelancerHome() {
           <div className="footer-logo-group">
             <span className="footer-logo">photo</span>
             <div className="footer-social">
-              <a href="#" className="footer-social-icon"> <img src="/github.svg" alt="GitHub" /> </a>
-              <a href="#" className="footer-social-icon"> <img src="/linkedin.svg" alt="LinkedIn" /> </a>
-              <a href="#" className="footer-social-icon"> <img src="/facebook.svg" alt="Facebook" /> </a>
-              <a href="#" className="footer-social-icon"> <img src="/x.svg" alt="X" /> </a>
+              <a href="#" className="footer-social-icon"> <Image src="/github.svg" alt="GitHub" width={28} height={28} /> </a>
+              <a href="#" className="footer-social-icon"> <Image src="/linkedin.svg" alt="LinkedIn" width={28} height={28} /> </a>
+              <a href="#" className="footer-social-icon"> <Image src="/facebook.svg" alt="Facebook" width={28} height={28} /> </a>
+              <a href="#" className="footer-social-icon"> <Image src="/x.svg" alt="X" width={28} height={28} /> </a>
             </div>
           </div>
         </div>
