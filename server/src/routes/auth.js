@@ -1,22 +1,32 @@
 import express from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import { PrismaClient } from '../../generated/prisma/index.js';
+import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 const router = express.Router();
 
 router.post('/register', async (req, res) => {
     const { name, email, password, metamaskId, cognitoId } = req.body;
+
+    console.log('Registration attempt:', { name, email, metamaskId, cognitoId });
+
     if (!email || !password || !name) {
         return res.status(400).json({ message: 'Name, email, and password are required.' });
     }
+
     try {
+        // Check if JWT_SECRET is configured
+        if (!process.env.JWT_SECRET) {
+            console.error('JWT_SECRET environment variable is not set');
+            return res.status(500).json({ message: 'Server configuration error' });
+        }
+
         const existingFreelancer = await prisma.freelancer.findFirst({
             where: {
                 OR: [
                     { email },
-                    { metamaskid: metamaskId }
+                    ...(metamaskId ? [{ metamaskid: metamaskId }] : [])
                 ]
             }
         });
@@ -33,8 +43,8 @@ router.post('/register', async (req, res) => {
                 name,
                 email,
                 password: hashedPassword,
-                metamaskid: metamaskId,
-                cognitoid: cognitoId
+                metamaskid: metamaskId || null,
+                cognitoid: cognitoId || `cognito_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
             },
             select: {
                 id: true,
@@ -45,22 +55,41 @@ router.post('/register', async (req, res) => {
             }
         });
 
+        console.log('Freelancer created successfully:', newFreelancer.id);
         res.status(201).json(newFreelancer);
     } catch (err) {
-        console.error(err);
-        res.status(500).json({ message: 'Server error' });
+        console.error('Registration error:', err);
+        res.status(500).json({
+            message: 'Server error',
+            error: process.env.NODE_ENV === 'development' ? err.message : undefined
+        });
     }
 });
 
 // Login Route
 router.post('/login', async (req, res) => {
     const { email, password } = req.body;
+
+    console.log('Login attempt:', { email });
+
     if (!email || !password) {
         return res.status(400).json({ message: 'Email and password are required.' });
     }
+
     try {
+        // Check if JWT_SECRET is configured
+        if (!process.env.JWT_SECRET) {
+            console.error('JWT_SECRET environment variable is not set');
+            return res.status(500).json({ message: 'Server configuration error' });
+        }
+
         const freelancer = await prisma.freelancer.findUnique({ where: { email } });
-        if (!freelancer || !(await bcrypt.compare(password, freelancer.password))) {
+        if (!freelancer) {
+            return res.status(400).json({ message: 'Invalid credentials.' });
+        }
+
+        const isPasswordValid = await bcrypt.compare(password, freelancer.password);
+        if (!isPasswordValid) {
             return res.status(400).json({ message: 'Invalid credentials.' });
         }
 
@@ -74,6 +103,7 @@ router.post('/login', async (req, res) => {
             { expiresIn: '1d' }
         );
 
+        console.log('Login successful for:', freelancer.email);
         res.json({
             token,
             freelancer: {
@@ -85,8 +115,11 @@ router.post('/login', async (req, res) => {
             }
         });
     } catch (err) {
-        console.error(err);
-        res.status(500).json({ message: 'Server error' });
+        console.error('Login error:', err);
+        res.status(500).json({
+            message: 'Server error',
+            error: process.env.NODE_ENV === 'development' ? err.message : undefined
+        });
     }
 });
 
