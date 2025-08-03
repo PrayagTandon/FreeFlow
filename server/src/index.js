@@ -10,7 +10,7 @@ const prisma = new PrismaClient();
 async function testConnection() {
   try {
     const users = await prisma.freelancer.findMany();
-    console.log('Connected to Neon DB. Freelancers:', users);
+    console.log('Connected to the Database');
   } catch (err) {
     console.error('❌ Failed to connect to DB:', err);
   }
