@@ -259,6 +259,7 @@ export default function HomePage() {
                 </div>
             )}
 
+            <main className="min-h-screen">
             {/* Navigation */}
             <nav className="bg-white shadow-sm border-b border-gray-200">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -360,7 +361,7 @@ export default function HomePage() {
                     </div>
                 </div>
             </section>
-
+            </main>                        
             {/* Search Section */}
             <section className="py-16 bg-white">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
