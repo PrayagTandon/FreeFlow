@@ -608,7 +608,8 @@ export default function HomePage() {
                     </div>
                 </div>
             </footer>
-
+            
+            {/* Making components */}
             <GoToTop />
         </div>
     );
