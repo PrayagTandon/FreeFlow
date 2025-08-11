@@ -48,7 +48,7 @@ export async function POST(request) {
           cognitoid: user.cognitoid,
           name: user.name,
           email: user.email,
-          metamask: user.metamaskid,
+          metamaskid: user.metamaskid,
           role: user.role
         }
       }, { status: 200 });

@@ -51,6 +51,8 @@ export default function Login() {
         setTimeout(() => {
           if (data.user.role === 'Freelancer') {
             router.push('/freelancer-home');
+          } else if (data.user.role === 'Client') {
+            router.push('/client-dashboard');
           } else {
             router.push('/dashboard');
           }
