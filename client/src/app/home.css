@@ -941,6 +941,29 @@ body, .homepage-container {
 .orange-btn:hover {
   background: #ff9800 !important;
 }
+
+/* Error and Success Messages */
+.error-message {
+  background: #fee;
+  color: #c53030;
+  border: 1px solid #feb2b2;
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-bottom: 16px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.success-message {
+  background: #f0fff4;
+  color: #38a169;
+  border: 1px solid #9ae6b4;
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-bottom: 16px;
+  font-size: 14px;
+  font-weight: 500;
+}
 @media (max-width: 600px) {
   .register-row {
     flex-direction: column;

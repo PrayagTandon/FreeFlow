@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Database Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ccc; border-radius: 5px; }
+        .success { background-color: #d4edda; border-color: #c3e6cb; }
+        .error { background-color: #f8d7da; border-color: #f5c6cb; }
+        button { padding: 10px 20px; margin: 5px; cursor: pointer; }
+        pre { background-color: #f8f9fa; padding: 10px; border-radius: 3px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>🧪 Database Functionality Test</h1>
+    
+    <div class="test-section">
+        <h3>0️⃣ Test Database Connection</h3>
+        <button onclick="testDatabaseConnection()">Test Database Connection</button>
+        <div id="db-connection-result"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>1️⃣ Initialize Database</h3>
+        <button onclick="initDatabase()">Initialize Database</button>
+        <div id="init-result"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>2️⃣ Test Registration</h3>
+        <button onclick="testRegistration()">Register Test User</button>
+        <div id="register-result"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>3️⃣ Test Login</h3>
+        <button onclick="testLogin()">Login Test User</button>
+        <div id="login-result"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>4️⃣ Test Duplicate Registration</h3>
+        <button onclick="testDuplicateRegistration()">Test Duplicate Registration</button>
+        <div id="duplicate-result"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>5️⃣ Test Invalid Login</h3>
+        <button onclick="testInvalidLogin()">Test Invalid Login</button>
+        <div id="invalid-login-result"></div>
+    </div>
+
+    <script>
+        const BASE_URL = 'http://localhost:3000/api';
+        const testUser = {
+            firstName: 'John',
+            lastName: 'Doe',
+            email: 'john.doe@test.com',
+            password: 'password123',
+            role: 'Freelancer',
+            wallet: '0x1234567890123456789012345678901234567890'
+        };
+
+        async function testDatabaseConnection() {
+            const resultDiv = document.getElementById('db-connection-result');
+            resultDiv.innerHTML = 'Testing connection...';
+            
+            try {
+                const response = await fetch(`${BASE_URL}/test-db`, {
+                    method: 'GET',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    resultDiv.className = 'success';
+                    resultDiv.innerHTML = `<strong>✅ Database Connection Successful:</strong><pre>${JSON.stringify(data, null, 2)}</pre>`;
+                } else {
+                    resultDiv.className = 'error';
+                    resultDiv.innerHTML = `<strong>❌ Database Connection Failed:</strong><pre>${JSON.stringify(data, null, 2)}</pre>`;
+                }
+            } catch (error) {
+                resultDiv.className = 'error';
+                resultDiv.innerHTML = `<strong>❌ Error:</strong> ${error.message}`;
+            }
+        }
+
+        async function initDatabase() {
+            const resultDiv = document.getElementById('init-result');
+            resultDiv.innerHTML = 'Initializing...';
+            
+            try {
+                const response = await fetch(`${BASE_URL}/init-db`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    resultDiv.className = 'success';
+                    resultDiv.innerHTML = `<strong>✅ Success:</strong><pre>${JSON.stringify(data, null, 2)}</pre>`;
+                } else {
+                    resultDiv.className = 'error';
+                    resultDiv.innerHTML = `<strong>❌ Failed:</strong><pre>${JSON.stringify(data, null, 2)}</pre>`;
+                }
+            } catch (error) {
+                resultDiv.className = 'error';
+                resultDiv.innerHTML = `<strong>❌ Error:</strong> ${error.message}`;
+            }
+        }
+
+        async function testRegistration() {
+            const resultDiv = document.getElementById('register-result');
+            resultDiv.innerHTML = 'Registering...';
+            
+            try {
+                const response = await fetch(`${BASE_URL}/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(testUser)
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    resultDiv.className = 'success';
+                    resultDiv.innerHTML = `<strong>✅ Registration Successful:</strong><pre>${JSON.stringify(data, null, 2)}</pre>`;
+                } else {
+                    resultDiv.className = 'error';
+                    resultDiv.innerHTML = `<strong>❌ Registration Failed:</strong><pre>${JSON.stringify(data, null, 2)}</pre>`;
+                }
+            } catch (error) {
+                resultDiv.className = 'error';
+                resultDiv.innerHTML = `<strong>❌ Error:</strong> ${error.message}`;
+            }
+        }
+
+        async function testLogin() {
+            const resultDiv = document.getElementById('login-result');
+            resultDiv.innerHTML = 'Logging in...';
+            
+            try {
+                const response = await fetch(`${BASE_URL}/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        email: testUser.email,
+                        password: testUser.password
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    resultDiv.className = 'success';
+                    resultDiv.innerHTML = `<strong>✅ Login Successful:</strong><pre>${JSON.stringify(data, null, 2)}</pre>`;
+                } else {
+                    resultDiv.className = 'error';
+                    resultDiv.innerHTML = `<strong>❌ Login Failed:</strong><pre>${JSON.stringify(data, null, 2)}</pre>`;
+                }
+            } catch (error) {
+                resultDiv.className = 'error';
+                resultDiv.innerHTML = `<strong>❌ Error:</strong> ${error.message}`;
+            }
+        }
+
+        async function testDuplicateRegistration() {
+            const resultDiv = document.getElementById('duplicate-result');
+            resultDiv.innerHTML = 'Testing duplicate registration...';
+            
+            try {
+                const response = await fetch(`${BASE_URL}/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(testUser)
+                });
+                
+                const data = await response.json();
+                
+                if (response.status === 409) {
+                    resultDiv.className = 'success';
+                    resultDiv.innerHTML = `<strong>✅ Duplicate Registration Properly Rejected:</strong><pre>${JSON.stringify(data, null, 2)}</pre>`;
+                } else {
+                    resultDiv.className = 'error';
+                    resultDiv.innerHTML = `<strong>❌ Duplicate Registration Should Have Been Rejected:</strong><pre>${JSON.stringify(data, null, 2)}</pre>`;
+                }
+            } catch (error) {
+                resultDiv.className = 'error';
+                resultDiv.innerHTML = `<strong>❌ Error:</strong> ${error.message}`;
+            }
+        }
+
+        async function testInvalidLogin() {
+            const resultDiv = document.getElementById('invalid-login-result');
+            resultDiv.innerHTML = 'Testing invalid login...';
+            
+            try {
+                const response = await fetch(`${BASE_URL}/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        email: testUser.email,
+                        password: 'wrongpassword'
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (response.status === 401) {
+                    resultDiv.className = 'success';
+                    resultDiv.innerHTML = `<strong>✅ Invalid Login Properly Rejected:</strong><pre>${JSON.stringify(data, null, 2)}</pre>`;
+                } else {
+                    resultDiv.className = 'error';
+                    resultDiv.innerHTML = `<strong>❌ Invalid Login Should Have Been Rejected:</strong><pre>${JSON.stringify(data, null, 2)}</pre>`;
+                }
+            } catch (error) {
+                resultDiv.className = 'error';
+                resultDiv.innerHTML = `<strong>❌ Error:</strong> ${error.message}`;
+            }
+        }
+    </script>
+</body>
+</html> 
