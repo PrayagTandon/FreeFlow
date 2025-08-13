@@ -7,7 +7,7 @@ body, .homepage-container {
 }
 
 .gradient-bg {
-  background: linear-gradient(90deg, #4b2e83 0%, #ffb23f 100%);
+  background: linear-gradient(90deg, #27187e 0%, #231671 100%);
 }
 
 .dark-gradient-bg {
@@ -1582,4 +1582,4 @@ body, .homepage-container {
     width: 40px;
     height: 40px;
   }
-} 
+}

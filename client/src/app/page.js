@@ -3,6 +3,7 @@ import './home.css';
 import Link from 'next/link';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import GoToTop from './components/GoToTop';
 
 const professionData = [
   {
@@ -200,6 +201,7 @@ export default function HomePage() {
           </div>
         </div>
       )}
+      <main className='h-screen'>
       {/* Navbar */}
       <nav className="navbar gradient-bg">
         <div className="navbar-left">
@@ -229,7 +231,7 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-
+      </main>
       {/* Professions Section */}
       <section className="professions-section">
         <h2>Explore Different <span className="highlight">Professions</span>, Get Paid With <span className="highlight">Trust</span></h2>
@@ -402,6 +404,8 @@ export default function HomePage() {
           <span>© {new Date().getFullYear()} FreeFlow. All rights reserved.</span>
         </div>
       </footer>
+
+      <GoToTop />
     </div>
   );
 }
