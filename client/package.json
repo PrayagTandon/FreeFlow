@@ -12,6 +12,7 @@
     "@types/bcryptjs": "^2.4.6",
     "@types/pg": "^8.15.5",
     "bcryptjs": "^3.0.2",
+    "dotenv": "^17.2.1",
     "next": "15.3.4",
     "node-fetch": "^3.3.2",
     "pg": "^8.16.3",
