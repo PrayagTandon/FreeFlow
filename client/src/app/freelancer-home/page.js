@@ -1,6 +1,6 @@
 "use client";
 import '../home.css';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -14,31 +14,30 @@ const trustBreakdown = [
   { color: '#FFD600', label: 'Activity', percent: 10 },
 ];
 
-const jobs = [
-  {
-    title: 'Website Development',
-    description: 'Build a modern, responsive website for a tech startup. Requires experience with React, Next.js, and UI/UX best practices. Deliver a landing page, blog, and contact form integrated with backend APIs.',
-    tags: ['Web', 'React', 'Next.js', 'UI/UX', 'API'],
-    proposals: 3,
-    clientTrust: 92,
-    photos: [1, 2, 3, 4],
-  },
-  {
-    title: 'DeFi Smart Contract Development',
-    description: 'Develop and audit a DeFi smart contract for a new protocol. Must have experience with Solidity, security best practices, and deploying to Ethereum testnets. Prior DeFi project experience preferred.',
-    tags: ['DeFi', 'Solidity', 'Smart Contracts', 'Audit', 'Ethereum'],
-    proposals: 5,
-    clientTrust: 88,
-    photos: [1, 2, 3, 4],
-  },
-];
+
 
 export default function FreelancerHome() {
-  // Stats (easy to connect to backend)
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [freelancerStats, setFreelancerStats] = useState({
+    activejobs: 0,
+    activebids: 0
+  });
+  const [availableJobs, setAvailableJobs] = useState([]);
+  const [showProposalForm, setShowProposalForm] = useState(false);
+  const [selectedJob, setSelectedJob] = useState(null);
+  const [proposalData, setProposalData] = useState({
+    coverLetter: '',
+    proposedTimeline: '',
+    timelineUnit: 'days'
+  });
+  const [submittingProposal, setSubmittingProposal] = useState(false);
+  
+  // Stats (now fetched from backend)
   const trustScore = 100;
   const totalProjects = 5;
-  const currentBids = 2;
   const [hoveredArc, setHoveredArc] = useState(null);
+  
   // SVG arc math
   const radius = 84;
   const stroke = 18;
@@ -47,9 +46,175 @@ export default function FreelancerHome() {
   let offset = 0;
   const router = useRouter();
 
+  useEffect(() => {
+    checkUserAndRole();
+  }, []);
+
+  const checkUserAndRole = async () => {
+    try {
+      // Check if user is logged in
+      const userData = localStorage.getItem('user');
+      if (!userData) {
+        console.log('No user data found, redirecting to login');
+        router.push('/login');
+        return;
+      }
+
+      const parsedUser = JSON.parse(userData);
+      console.log('Current user:', parsedUser);
+
+      // Check if user is a freelancer
+      if (parsedUser.role !== 'Freelancer') {
+        console.log('User is not a freelancer, logging out and redirecting to login');
+        localStorage.removeItem('user');
+        router.push('/login');
+        return;
+      }
+
+      setUser(parsedUser);
+      
+      // Fetch freelancer stats from database
+      await fetchFreelancerStats(parsedUser.metamaskid);
+      
+      // Fetch available jobs
+      await fetchAvailableJobs();
+      
+    } catch (error) {
+      console.error('Error checking user:', error);
+      router.push('/login');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchFreelancerStats = async (metamaskId) => {
+    try {
+      // Fetch freelancer data from the database
+      const response = await fetch('/api/get-freelancer-stats', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ metamaskId }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setFreelancerStats({
+          activejobs: data.activejobs || 0,
+          activebids: data.activebids || 0
+        });
+      } else {
+        console.error('Failed to fetch freelancer stats');
+      }
+    } catch (error) {
+      console.error('Error fetching freelancer stats:', error);
+    }
+  };
+
+  const fetchAvailableJobs = async () => {
+    try {
+      const response = await fetch('/api/get-jobs');
+      if (response.ok) {
+        const data = await response.json();
+        setAvailableJobs(data.jobs || []);
+      } else {
+        console.error('Failed to fetch available jobs');
+      }
+    } catch (error) {
+      console.error('Error fetching available jobs:', error);
+    }
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('user');
+    router.push('/login');
+  };
+
+  const handleSendProposal = (job) => {
+    setSelectedJob(job);
+    setShowProposalForm(true);
+    setProposalData({
+      coverLetter: '',
+      proposedTimeline: '',
+      timelineUnit: 'days'
+    });
+  };
+
+  const handleProposalSubmit = async (e) => {
+    e.preventDefault();
+    
+    if (!selectedJob) return;
+    
+    setSubmittingProposal(true);
+    
+    try {
+      const response = await fetch('/api/submit-proposal', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          jobId: selectedJob.id,
+          coverLetter: proposalData.coverLetter,
+          budgetQuoted: selectedJob.budget || 0,
+          proposedTimeline: `${proposalData.proposedTimeline} ${proposalData.timelineUnit}`,
+          freelancerEmail: user.email,
+          clientEmail: selectedJob.clientEmail
+        }),
+      });
+
+      if (response.ok) {
+        alert('Proposal submitted successfully!');
+        setShowProposalForm(false);
+        setSelectedJob(null);
+        setProposalData({
+          coverLetter: '',
+          proposedTimeline: '',
+          timelineUnit: 'days'
+        });
+      } else {
+        const errorData = await response.json();
+        alert(`Error: ${errorData.error}`);
+      }
+    } catch (error) {
+      console.error('Error submitting proposal:', error);
+      alert('Failed to submit proposal. Please try again.');
+    } finally {
+      setSubmittingProposal(false);
+    }
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setProposalData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  if (loading) {
+    return (
+      <div style={{ 
+        display: 'flex', 
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        height: '100vh',
+        fontSize: '1.2rem',
+        color: '#666'
+      }}>
+        Loading...
+      </div>
+    );
+  }
+
+  if (!user) {
+    return null;
+  }
+
   return (
     <div className="freelancer-home-bg">
-      {/* Navbar (placeholder, you can extract to a component) */}
+      {/* Navbar */}
       <nav className="navbar gradient-bg">
         <div className="navbar-left">
           <span className="logo">Logo</span>
@@ -62,6 +227,20 @@ export default function FreelancerHome() {
           <input className="nav-search" placeholder="Search" />
           <button className="nav-job-btn">Jobs ▾</button>
           <span className="nav-avatar">🧑‍💻</span>
+          <button 
+            onClick={handleLogout}
+            style={{
+              background: 'none',
+              border: '1px solid white',
+              color: 'white',
+              padding: '8px 16px',
+              borderRadius: '4px',
+              cursor: 'pointer',
+              marginLeft: '10px'
+            }}
+          >
+            Logout
+          </button>
         </div>
       </nav>
       <div className="freelancer-home-main">
@@ -113,12 +292,12 @@ export default function FreelancerHome() {
           <div className="dashboard-stats-row freelancer-stats-row">
             <div className="dashboard-stat-card">
               <div className="stat-title small-title">My Projects</div>
-              <div className="stat-value">{totalProjects}</div>
-              <div className="stat-desc">Total Projects</div>
+              <div className="stat-value">{freelancerStats.activejobs}</div>
+              <div className="stat-desc">Active Projects</div>
             </div>
             <div className="dashboard-stat-card">
               <div className="stat-title small-title">Active Bids</div>
-              <div className="stat-value">{currentBids}</div>
+              <div className="stat-value">{freelancerStats.activebids}</div>
               <div className="stat-desc">Current Bids</div>
             </div>
           </div>
@@ -133,29 +312,46 @@ export default function FreelancerHome() {
               </div>
             </div>
             <div className="jobs-list">
-              {jobs.map((job, idx) => (
-                <div className="job-card" key={idx}>
-                  <div className="job-title-row">
+              {availableJobs.length > 0 ? (
+                availableJobs.map((job, idx) => (
+                  <div className="job-card" key={idx}>
+                                      <div className="job-title-row">
                     <span className="job-title">{job.title}</span>
-                    <button className="job-proposal-btn">Send a Proposal</button>
+                    <button 
+                      className="job-proposal-btn"
+                      onClick={() => handleSendProposal(job)}
+                    >
+                      Send a Proposal
+                    </button>
                   </div>
-                  <div className="job-desc">{job.description}</div>
-                  <div className="job-tags-row">
-                    {job.tags.map(tag => (
-                      <span className="job-tag" key={tag}>{tag}</span>
-                    ))}
+                    <div className="job-desc">{job.description}</div>
+                    <div className="job-tags-row">
+                      {job.tags && job.tags.map((tag, tagIdx) => (
+                        <span className="job-tag" key={tagIdx}>{tag}</span>
+                      ))}
+                    </div>
+                    <div className="job-meta-row">
+                      <span className="job-meta">Company: <b>{job.companyName || 'Not specified'}</b></span>
+                      <span className="job-meta">Budget: <b>${job.budget || 'Not specified'}</b></span>
+                    </div>
+                    <div className="job-meta-row">
+                      <span className="job-meta">Location: <b>{job.location || 'Remote'}</b></span>
+                      <span className="job-meta">Level: <b>{job.jobLevel || 'Not specified'}</b></span>
+                    </div>
+                    {job.photoUrls && job.photoUrls.length > 0 && (
+                      <div className="job-photos-row">
+                        {job.photoUrls.map((_, i) => (
+                          <div className="job-photo" key={i}> <span className="job-photo-placeholder">🖼️</span> </div>
+                        ))}
+                      </div>
+                    )}
                   </div>
-                  <div className="job-meta-row">
-                    <span className="job-meta">Proposals: <b>{job.proposals}</b></span>
-                    <span className="job-meta">Client Trust Score: <b>{job.clientTrust}</b></span>
-                  </div>
-                  <div className="job-photos-row">
-                    {job.photos.map((_, i) => (
-                      <div className="job-photo" key={i}> <span className="job-photo-placeholder">🖼️</span> </div>
-                    ))}
-                  </div>
+                ))
+              ) : (
+                <div style={{ textAlign: 'center', padding: '2rem', color: '#666' }}>
+                  No jobs available at the moment. Check back later!
                 </div>
-              ))}
+              )}
             </div>
           </div>
         </div>
@@ -163,8 +359,8 @@ export default function FreelancerHome() {
         <div className="freelancer-home-right">
           <div className="profile-card">
             <div className="profile-avatar">🧑‍💻</div>
-            <div className="profile-name">Name</div>
-            <div className="profile-wallet">Metamask ID</div>
+            <div className="profile-name">{user.name}</div>
+            <div className="profile-wallet">{user.metamaskid || 'No wallet connected'}</div>
             <button className="profile-upgrade-btn">Upgrade your Profile</button>
           </div>
           <div className="sidebar-card"></div>
@@ -172,6 +368,184 @@ export default function FreelancerHome() {
           <div className="sidebar-card"></div>
         </div>
       </div>
+
+      {/* Proposal Submission Modal */}
+      {showProposalForm && selectedJob && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: 'rgba(0, 0, 0, 0.5)',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          zIndex: 1000
+        }}>
+          <div style={{
+            background: 'white',
+            padding: '2rem',
+            borderRadius: '8px',
+            width: '90%',
+            maxWidth: '600px',
+            maxHeight: '90vh',
+            overflow: 'auto'
+          }}>
+            <div style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              marginBottom: '1.5rem'
+            }}>
+              <h2 style={{ margin: 0, color: '#333' }}>Submit Proposal</h2>
+              <button
+                onClick={() => setShowProposalForm(false)}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  fontSize: '1.5rem',
+                  cursor: 'pointer',
+                  color: '#666'
+                }}
+              >
+                ×
+              </button>
+            </div>
+
+            <div style={{ marginBottom: '1rem', padding: '1rem', background: '#f8f9fa', borderRadius: '4px' }}>
+              <h3 style={{ margin: '0 0 0.5rem 0', color: '#333' }}>{selectedJob.title}</h3>
+              <p style={{ margin: 0, color: '#666', fontSize: '0.9rem' }}>
+                {selectedJob.description.substring(0, 100)}...
+              </p>
+              <div style={{ marginTop: '0.5rem', padding: '0.5rem', background: '#e9ecef', borderRadius: '4px' }}>
+                <strong>Budget: ${selectedJob.budget || 'Not specified'}</strong>
+              </div>
+            </div>
+
+            <form onSubmit={handleProposalSubmit}>
+              <div style={{ marginBottom: '1rem' }}>
+                <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold' }}>
+                  Cover Letter *
+                </label>
+                <textarea
+                  name="coverLetter"
+                  value={proposalData.coverLetter}
+                  onChange={handleInputChange}
+                  placeholder="Explain how your experience aligns with this job and any relevant information that would help the client choose you..."
+                  rows={6}
+                  required
+                  style={{
+                    width: '100%',
+                    padding: '0.75rem',
+                    border: '1px solid #ddd',
+                    borderRadius: '4px',
+                    fontSize: '1rem',
+                    resize: 'vertical'
+                  }}
+                />
+              </div>
+
+              <div style={{ marginBottom: '1rem' }}>
+                <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold' }}>
+                  Job Budget (USD)
+                </label>
+                <div style={{
+                  padding: '0.75rem',
+                  background: '#f8f9fa',
+                  border: '1px solid #ddd',
+                  borderRadius: '4px',
+                  fontSize: '1rem',
+                  color: '#333',
+                  fontWeight: 'bold'
+                }}>
+                  ${selectedJob.budget || 'Not specified'}
+                </div>
+                <p style={{ margin: '0.5rem 0 0 0', fontSize: '0.875rem', color: '#666' }}>
+                  This is the budget set by the client for this job.
+                </p>
+              </div>
+
+              <div style={{ marginBottom: '1.5rem' }}>
+                <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold' }}>
+                  Proposed Timeline *
+                </label>
+                <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                  <input
+                    type="number"
+                    name="proposedTimeline"
+                    value={proposalData.proposedTimeline}
+                    onChange={handleInputChange}
+                    placeholder="e.g., 30"
+                    required
+                    min="1"
+                    style={{
+                      flex: 1,
+                      padding: '0.75rem',
+                      border: '1px solid #ddd',
+                      borderRadius: '4px',
+                      fontSize: '1rem'
+                    }}
+                  />
+                  <select
+                    name="timelineUnit"
+                    value={proposalData.timelineUnit}
+                    onChange={handleInputChange}
+                    style={{
+                      padding: '0.75rem',
+                      border: '1px solid #ddd',
+                      borderRadius: '4px',
+                      fontSize: '1rem',
+                      minWidth: '100px'
+                    }}
+                  >
+                    <option value="days">Days</option>
+                    <option value="weeks">Weeks</option>
+                    <option value="months">Months</option>
+                  </select>
+                </div>
+              </div>
+
+              <div style={{ display: 'flex', gap: '1rem', justifyContent: 'flex-end' }}>
+                <button
+                  type="button"
+                  onClick={() => setShowProposalForm(false)}
+                  style={{
+                    background: '#6c757d',
+                    border: 'none',
+                    padding: '0.75rem 1.5rem',
+                    borderRadius: '4px',
+                    color: 'white',
+                    fontSize: '1rem',
+                    fontWeight: 'bold',
+                    cursor: 'pointer'
+                  }}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={submittingProposal}
+                  className="job-proposal-btn"
+                  style={{
+                    background: submittingProposal ? '#6c757d' : '#007bff',
+                    border: 'none',
+                    padding: '0.75rem 1.5rem',
+                    borderRadius: '4px',
+                    color: 'white',
+                    fontSize: '1rem',
+                    fontWeight: 'bold',
+                    cursor: submittingProposal ? 'not-allowed' : 'pointer'
+                  }}
+                >
+                  {submittingProposal ? 'Submitting...' : 'Submit Proposal'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
       {/* Footer (reuse from homepage) */}
       <footer className="footer improved-footer-gradient">
         <div className="footer-main">

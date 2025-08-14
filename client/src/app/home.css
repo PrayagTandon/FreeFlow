@@ -1582,4 +1582,89 @@ body, .homepage-container {
     width: 40px;
     height: 40px;
   }
+}
+
+/* Job loading and error states */
+.jobs-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+}
+
+.loading-spinner {
+  color: #6B7280;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.jobs-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem;
+  gap: 1rem;
+}
+
+.error-message {
+  color: #EF4444;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.retry-btn {
+  background: #EF4444;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.retry-btn:hover {
+  background: #DC2626;
+}
+
+.no-jobs {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+}
+
+.no-jobs-message {
+  color: #6B7280;
+  font-size: 1rem;
+  font-weight: 500;
+  text-align: center;
+}
+
+/* Enhanced job card styling */
+.job-company {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.job-expiry-row {
+  border-top: 1px solid #E5E7EB;
+  margin-top: 1rem;
+  padding-top: 1rem;
+}
+
+/* Responsive improvements for job cards */
+@media (max-width: 700px) {
+  .job-expiry-row {
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: flex-start;
+  }
+
+  .job-meta-row {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
 } 

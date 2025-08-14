@@ -27,8 +27,6 @@ export default function ClientDashboard() {
 
   // Stats (will be calculated from real data)
   const totalProjects = proposals.length;
-  const activeProposals = proposals.filter(p => p.status === 'Active').length;
-  const completedProjects = proposals.filter(p => p.status === 'Completed').length;
 
   useEffect(() => {
     // Get user data from localStorage
@@ -49,7 +47,7 @@ export default function ClientDashboard() {
       }
       
       // Fetch user's proposals
-      fetchProposals(parsedUser.id);
+      fetchProposals(parsedUser.metamaskid);
     } else {
       // No user data, redirect to login
       router.push('/login');
@@ -99,6 +97,23 @@ export default function ClientDashboard() {
   const handleProposalSubmit = async (e) => {
     e.preventDefault();
     
+    // Debug logging for client cognitoid
+    console.log('🔍 DEBUG: User data before submission:', {
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      cognitoid: user.cognitoid,
+      id: user.id
+    });
+    
+    console.log('🔍 DEBUG: Proposal data being sent:', {
+      ...proposalData,
+      contractToHire: true,
+      customizable: true,
+      clientId: user.metamaskid,
+      clientEmail: user.email
+    });
+    
     try {
              const response = await fetch('/api/post-proposal', {
          method: 'POST',
@@ -109,7 +124,7 @@ export default function ClientDashboard() {
            ...proposalData,
            contractToHire: true, // Always true for active status
            customizable: true, // Always true
-           clientId: user.id,
+           clientId: user.metamaskid, // Use MetaMask wallet address instead of cognito ID
            clientEmail: user.email
          }),
        });
@@ -133,7 +148,7 @@ export default function ClientDashboard() {
          });
         
         // Refresh proposals list
-        fetchProposals(user.id);
+        fetchProposals(user.metamaskid);
         
         // Show success message
         alert('Proposal posted successfully!');
@@ -448,14 +463,25 @@ export default function ClientDashboard() {
               <div className="stat-desc">All Time</div>
             </div>
             <div className="dashboard-stat-card">
-              <div className="stat-title small-title">Active Proposals</div>
-              <div className="stat-value">{activeProposals}</div>
-              <div className="stat-desc">Currently Open</div>
-            </div>
-            <div className="dashboard-stat-card">
-              <div className="stat-title small-title">Completed</div>
-              <div className="stat-value">{completedProjects}</div>
-              <div className="stat-desc">Successfully Done</div>
+              <div className="stat-title small-title">View Bids</div>
+              <button 
+                className="job-proposal-btn"
+                onClick={() => router.push('/view-bids')}
+                style={{
+                  background: '#007bff',
+                  border: 'none',
+                  padding: '0.5rem 1rem',
+                  borderRadius: '4px',
+                  color: 'white',
+                  fontSize: '0.875rem',
+                  fontWeight: 'bold',
+                  cursor: 'pointer',
+                  width: '100%',
+                  marginTop: '0.5rem'
+                }}
+              >
+                View Freelancer Bids
+              </button>
             </div>
           </div>
 
@@ -463,11 +489,6 @@ export default function ClientDashboard() {
           <div className="jobs-section">
             <div className="jobs-header">
               <span className="jobs-title">My Proposals</span>
-              <div className="jobs-tabs">
-                <span className="jobs-tab active">Active</span>
-                <span className="jobs-tab">In Progress</span>
-                <span className="jobs-tab">Completed</span>
-              </div>
             </div>
             <div className="jobs-list">
               {loadingProposals ? (
