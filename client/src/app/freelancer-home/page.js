@@ -56,7 +56,7 @@ export default function FreelancerHome() {
           <a href="#" className="nav-link">Find Jobs</a>
           <a href="#" className="nav-link">How It Works</a>
           <a href="#" className="nav-link">Proposals</a>
-          <a href="#" className="nav-link">Messages</a>
+          <Link href="/chat" className="nav-link">Messages</Link>
         </div>
         <div className="navbar-right">
           <input className="nav-search" placeholder="Search" />

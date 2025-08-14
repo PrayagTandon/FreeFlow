@@ -182,7 +182,7 @@ export default function ClientDashboard() {
           <a href="#" className="nav-link">Find Freelancers</a>
           <a href="#" className="nav-link">How It Works</a>
           <a href="#" className="nav-link">My Proposals</a>
-          <a href="#" className="nav-link">Messages</a>
+          <Link href="/chat" className="nav-link">Messages</Link>
         </div>
         <div className="navbar-right">
           <input className="nav-search" placeholder="Search freelancers" />
