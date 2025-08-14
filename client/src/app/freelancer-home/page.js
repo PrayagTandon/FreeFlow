@@ -33,6 +33,12 @@ export default function FreelancerHome() {
   });
   const [submittingProposal, setSubmittingProposal] = useState(false);
   
+  // New state for bids modal
+  const [showBidsModal, setShowBidsModal] = useState(false);
+  const [myBids, setMyBids] = useState([]);
+  const [loadingBids, setLoadingBids] = useState(false);
+  const [withdrawingBid, setWithdrawingBid] = useState(null);
+  
   // Stats (now fetched from backend)
   const trustScore = 100;
   const totalProjects = 5;
@@ -126,6 +132,58 @@ export default function FreelancerHome() {
     }
   };
 
+  const fetchMyBids = async () => {
+    try {
+      setLoadingBids(true);
+      const response = await fetch(`/api/get-freelancer-bids?freelancerEmail=${encodeURIComponent(user.email)}`);
+      if (response.ok) {
+        const data = await response.json();
+        setMyBids(data.bids || []);
+      } else {
+        console.error('Failed to fetch my bids');
+      }
+    } catch (error) {
+      console.error('Error fetching my bids:', error);
+    } finally {
+      setLoadingBids(false);
+    }
+  };
+
+  const handleWithdrawBid = async (proposalId) => {
+    if (!confirm('Are you sure you want to withdraw this bid? This action cannot be undone.')) {
+      return;
+    }
+
+    try {
+      setWithdrawingBid(proposalId);
+      const response = await fetch(`/api/withdraw-bid?proposalId=${proposalId}&freelancerEmail=${encodeURIComponent(user.email)}`, {
+        method: 'DELETE',
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        alert('Bid withdrawn successfully!');
+        
+        // Refresh bids and stats
+        await fetchMyBids();
+        await fetchFreelancerStats(user.metamaskid);
+      } else {
+        const errorData = await response.json();
+        alert(`Error: ${errorData.error}`);
+      }
+    } catch (error) {
+      console.error('Error withdrawing bid:', error);
+      alert('Failed to withdraw bid. Please try again.');
+    } finally {
+      setWithdrawingBid(null);
+    }
+  };
+
+  const openBidsModal = async () => {
+    await fetchMyBids();
+    setShowBidsModal(true);
+  };
+
   const handleLogout = () => {
     localStorage.removeItem('user');
     router.push('/login');
@@ -173,6 +231,9 @@ export default function FreelancerHome() {
           proposedTimeline: '',
           timelineUnit: 'days'
         });
+        
+        // Refresh freelancer stats to show updated activebids count
+        await fetchFreelancerStats(user.metamaskid);
       } else {
         const errorData = await response.json();
         alert(`Error: ${errorData.error}`);
@@ -295,10 +356,13 @@ export default function FreelancerHome() {
               <div className="stat-value">{freelancerStats.activejobs}</div>
               <div className="stat-desc">Active Projects</div>
             </div>
-            <div className="dashboard-stat-card">
+            <div className="dashboard-stat-card" 
+                 style={{ cursor: 'pointer' }}
+                 onClick={openBidsModal}
+                 title="Click to view your bids">
               <div className="stat-title small-title">Active Bids</div>
               <div className="stat-value">{freelancerStats.activebids}</div>
-              <div className="stat-desc">Current Bids</div>
+              <div className="stat-desc">Current Bids (Click to view)</div>
             </div>
           </div>
           {/* Jobs You Might Like */}
@@ -542,6 +606,192 @@ export default function FreelancerHome() {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* My Bids Modal */}
+      {showBidsModal && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: 'rgba(0, 0, 0, 0.5)',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          zIndex: 1000
+        }}>
+          <div style={{
+            background: 'white',
+            padding: '2rem',
+            borderRadius: '8px',
+            width: '90%',
+            maxWidth: '800px',
+            maxHeight: '90vh',
+            overflow: 'auto'
+          }}>
+            <div style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              marginBottom: '1.5rem'
+            }}>
+              <h2 style={{ margin: 0, color: '#333' }}>My Bids</h2>
+              <button
+                onClick={() => setShowBidsModal(false)}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  fontSize: '1.5rem',
+                  cursor: 'pointer',
+                  color: '#666'
+                }}
+              >
+                ×
+              </button>
+            </div>
+
+            {loadingBids ? (
+              <div style={{ textAlign: 'center', padding: '2rem', color: '#666' }}>
+                Loading your bids...
+              </div>
+            ) : myBids.length > 0 ? (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                {myBids.map((bid, index) => (
+                  <div key={bid.proposalId} style={{
+                    border: '1px solid #e0e0e0',
+                    borderRadius: '8px',
+                    padding: '1.5rem',
+                    background: '#fafafa'
+                  }}>
+                    <div style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'flex-start',
+                      marginBottom: '1rem'
+                    }}>
+                      <div style={{ flex: 1 }}>
+                        <h3 style={{ margin: '0 0 0.5rem 0', color: '#333' }}>{bid.jobTitle}</h3>
+                        <p style={{ margin: '0 0 1rem 0', color: '#666', fontSize: '0.9rem' }}>
+                          {bid.jobDescription.substring(0, 150)}...
+                        </p>
+                        
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
+                          <div>
+                            <strong>Company:</strong> {bid.companyName || 'Not specified'}
+                          </div>
+                          <div>
+                            <strong>Budget:</strong> ${bid.jobBudget || 'Not specified'}
+                          </div>
+                          <div>
+                            <strong>Location:</strong> {bid.location || 'Remote'}
+                          </div>
+                          <div>
+                            <strong>Job Level:</strong> {bid.jobLevel || 'Not specified'}
+                          </div>
+                        </div>
+
+                        <div style={{ marginBottom: '1rem' }}>
+                          <strong>Your Proposal:</strong>
+                          <div style={{ 
+                            background: '#f8f9fa', 
+                            padding: '1rem', 
+                            borderRadius: '4px', 
+                            marginTop: '0.5rem',
+                            border: '1px solid #e9ecef'
+                          }}>
+                            <div><strong>Cover Letter:</strong></div>
+                            <p style={{ margin: '0.5rem 0 0 0', fontSize: '0.9rem' }}>
+                              {bid.coverLetter}
+                            </p>
+                            <div style={{ marginTop: '1rem', display: 'flex', gap: '1rem' }}>
+                              <span><strong>Your Budget:</strong> ${bid.budgetQuoted}</span>
+                              <span><strong>Timeline:</strong> {bid.proposedTimeline}</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                      paddingTop: '1rem',
+                      borderTop: '1px solid #e0e0e0'
+                    }}>
+                      <div style={{
+                        padding: '0.5rem 1rem',
+                        borderRadius: '4px',
+                        fontSize: '0.875rem',
+                        fontWeight: 'bold',
+                        ...(bid.status === 'pending' && { background: '#fff3cd', color: '#856404' }),
+                        ...(bid.status === 'accepted' && { background: '#d4edda', color: '#155724' }),
+                        ...(bid.status === 'rejected' && { background: '#f8d7da', color: '#721c24' }),
+                        ...(bid.status === 'under_review' && { background: '#d1ecf1', color: '#0c5460' })
+                      }}>
+                        {bid.status === 'pending' && '⏳ Pending'}
+                        {bid.status === 'accepted' && '✅ Accepted'}
+                        {bid.status === 'rejected' && '❌ Rejected'}
+                        {bid.status === 'under_review' && '🔍 Under Review'}
+                      </div>
+
+                      <div style={{ display: 'flex', gap: '0.5rem' }}>
+                        <span style={{ fontSize: '0.875rem', color: '#666' }}>
+                          Submitted: {new Date(bid.submittedAt).toLocaleDateString()}
+                        </span>
+                        
+                        {bid.status === 'pending' && (
+                          <button
+                            onClick={() => handleWithdrawBid(bid.proposalId)}
+                            disabled={withdrawingBid === bid.proposalId}
+                            style={{
+                              background: '#dc3545',
+                              border: 'none',
+                              padding: '0.5rem 1rem',
+                              borderRadius: '4px',
+                              color: 'white',
+                              fontSize: '0.875rem',
+                              fontWeight: 'bold',
+                              cursor: withdrawingBid === bid.proposalId ? 'not-allowed' : 'pointer',
+                              opacity: withdrawingBid === bid.proposalId ? 0.6 : 1
+                            }}
+                          >
+                            {withdrawingBid === bid.proposalId ? 'Withdrawing...' : 'Withdraw Bid'}
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div style={{ textAlign: 'center', padding: '2rem', color: '#666' }}>
+                <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>📝</div>
+                <h3 style={{ margin: '0 0 1rem 0', color: '#333' }}>No Bids Yet</h3>
+                <p style={{ margin: '0 0 1.5rem 0', color: '#666' }}>
+                  You haven't submitted any bids yet. Start by browsing available jobs and submitting proposals!
+                </p>
+                <button
+                  onClick={() => setShowBidsModal(false)}
+                  style={{
+                    background: '#007bff',
+                    border: 'none',
+                    padding: '0.75rem 1.5rem',
+                    borderRadius: '4px',
+                    color: 'white',
+                    fontSize: '1rem',
+                    fontWeight: 'bold',
+                    cursor: 'pointer'
+                  }}
+                >
+                  Browse Jobs
+                </button>
+              </div>
+            )}
           </div>
         </div>
       )}

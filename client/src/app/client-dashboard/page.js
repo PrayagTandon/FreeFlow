@@ -24,9 +24,12 @@ export default function ClientDashboard() {
   });
   const [proposals, setProposals] = useState([]);
   const [loadingProposals, setLoadingProposals] = useState(false);
+  const [bids, setBids] = useState([]);
+  const [loadingBids, setLoadingBids] = useState(false);
 
   // Stats (will be calculated from real data)
   const totalProjects = proposals.length;
+  const totalBids = bids.length;
 
   useEffect(() => {
     // Get user data from localStorage
@@ -48,6 +51,8 @@ export default function ClientDashboard() {
       
       // Fetch user's proposals
       fetchProposals(parsedUser.metamaskid);
+      // Fetch user's bids
+      fetchBids(parsedUser.email);
     } else {
       // No user data, redirect to login
       router.push('/login');
@@ -71,6 +76,56 @@ export default function ClientDashboard() {
     } finally {
       setLoadingProposals(false);
     }
+  };
+
+  const fetchBids = async (clientEmail) => {
+    setLoadingBids(true);
+    try {
+      const response = await fetch(`/api/get-client-bids?clientEmail=${encodeURIComponent(clientEmail)}`);
+      if (response.ok) {
+        const data = await response.json();
+        setBids(data.bids || []);
+      } else {
+        console.error('Failed to fetch bids');
+      }
+    } catch (error) {
+      console.error('Error fetching bids:', error);
+    } finally {
+      setLoadingBids(false);
+    }
+  };
+
+  const handleBidAction = async (proposalId, action) => {
+    try {
+      const response = await fetch('/api/update-bid-status', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          proposalId,
+          status: action,
+          clientEmail: user.email
+        }),
+      });
+
+      if (response.ok) {
+        // Refresh bids to show updated status
+        fetchBids(user.email);
+        alert(`Bid ${action} successfully!`);
+      } else {
+        const errorData = await response.json();
+        alert(`Error: ${errorData.error}`);
+      }
+    } catch (error) {
+      console.error('Error updating bid status:', error);
+      alert('Failed to update bid status. Please try again.');
+    }
+  };
+
+  const openChat = (freelancerEmail) => {
+    // TODO: Implement chat functionality
+    alert(`Chat with ${freelancerEmail} - Feature coming soon!`);
   };
 
   const refreshUserData = async (email) => {
@@ -463,25 +518,9 @@ export default function ClientDashboard() {
               <div className="stat-desc">All Time</div>
             </div>
             <div className="dashboard-stat-card">
-              <div className="stat-title small-title">View Bids</div>
-              <button 
-                className="job-proposal-btn"
-                onClick={() => router.push('/view-bids')}
-                style={{
-                  background: '#007bff',
-                  border: 'none',
-                  padding: '0.5rem 1rem',
-                  borderRadius: '4px',
-                  color: 'white',
-                  fontSize: '0.875rem',
-                  fontWeight: 'bold',
-                  cursor: 'pointer',
-                  width: '100%',
-                  marginTop: '0.5rem'
-                }}
-              >
-                View Freelancer Bids
-              </button>
+              <div className="stat-title small-title">Total Bids</div>
+              <div className="stat-value">{totalBids}</div>
+              <div className="stat-desc">Received</div>
             </div>
           </div>
 
@@ -564,6 +603,246 @@ export default function ClientDashboard() {
               )}
             </div>
           </div>
+
+          {/* Freelancer Bids Section */}
+          <div className="jobs-section">
+            <div className="jobs-header">
+              <span className="jobs-title">Freelancer Bids</span>
+            </div>
+            <div className="jobs-list">
+              {loadingBids ? (
+                <div style={{ textAlign: 'center', padding: '2rem', color: '#666' }}>
+                  Loading bids...
+                </div>
+              ) : bids.length === 0 ? (
+                <div style={{ textAlign: 'center', padding: '2rem', color: '#666' }}>
+                  No bids received yet. Your job postings will appear here when freelancers submit proposals.
+                </div>
+              ) : (
+                bids.map((bid) => (
+                  <div className="job-card" key={bid.proposalId} style={{ border: '2px solid #e9ecef' }}>
+                    {/* Job Title and Status */}
+                    <div className="job-title-row">
+                      <span className="job-title">{bid.jobTitle}</span>
+                      <span className="job-status" style={{ 
+                        background: bid.status === 'accepted' ? '#28a745' : 
+                                   bid.status === 'rejected' ? '#dc3545' : 
+                                   bid.status === 'under_review' ? '#ffc107' : '#6c757d',
+                        color: 'white',
+                        padding: '0.25rem 0.75rem', 
+                        borderRadius: '20px', 
+                        fontSize: '0.875rem' 
+                      }}>
+                        {bid.status.charAt(0).toUpperCase() + bid.status.slice(1).replace('_', ' ')}
+                      </span>
+                    </div>
+
+                    {/* Job Description */}
+                    <div className="job-desc">{bid.jobDescription}</div>
+
+                    {/* Company and Location */}
+                    {(bid.companyName || bid.location) && (
+                      <div style={{ marginBottom: '0.5rem', fontSize: '0.9rem', color: '#666' }}>
+                        {bid.companyName && <span style={{ marginRight: '1rem' }}>🏢 {bid.companyName}</span>}
+                        {bid.location && <span>📍 {bid.location}</span>}
+                      </div>
+                    )}
+
+                    {/* Job Level and Tags */}
+                    {(bid.jobLevel || (bid.tags && bid.tags.length > 0)) && (
+                      <div style={{ marginBottom: '0.5rem', fontSize: '0.9rem', color: '#666' }}>
+                        {bid.jobLevel && <span style={{ marginRight: '1rem' }}>📊 {bid.jobLevel}</span>}
+                        {bid.tags && bid.tags.length > 0 && (
+                          <span>🏷️ {bid.tags.join(', ')}</span>
+                        )}
+                      </div>
+                    )}
+
+                    {/* Your Budget vs Freelancer's Quote */}
+                    <div style={{ marginBottom: '0.5rem', fontSize: '0.9rem', color: '#666' }}>
+                      <span style={{ marginRight: '1rem' }}>💰 Your Budget: <b>${bid.jobBudget}</b></span>
+                      <span>💼 Freelancer Quote: <b>${bid.budgetQuoted}</b></span>
+                    </div>
+
+                    {/* Freelancer's Cover Letter */}
+                    <div style={{ 
+                      marginBottom: '1rem', 
+                      padding: '1rem', 
+                      background: '#f8f9fa', 
+                      borderRadius: '4px',
+                      border: '1px solid #e9ecef'
+                    }}>
+                      <strong>Cover Letter:</strong>
+                      <div style={{ marginTop: '0.5rem', lineHeight: '1.5' }}>
+                        {bid.coverLetter}
+                      </div>
+                    </div>
+
+                    {/* Freelancer's Proposed Timeline */}
+                    <div style={{ marginBottom: '1rem', fontSize: '0.9rem', color: '#666' }}>
+                      <strong>⏱️ Proposed Timeline:</strong> {bid.proposedTimeline}
+                    </div>
+
+                    {/* Freelancer Email and Submission Date */}
+                    <div style={{ marginBottom: '1rem', fontSize: '0.9rem', color: '#666' }}>
+                      <span style={{ marginRight: '1rem' }}>👤 Freelancer: {bid.freelancerEmail}</span>
+                      <span>📅 Submitted: {new Date(bid.submittedAt).toLocaleDateString()}</span>
+                    </div>
+
+                    {/* Action Buttons */}
+                    {bid.status === 'pending' && (
+                      <div style={{ 
+                        display: 'flex', 
+                        gap: '0.5rem', 
+                        flexWrap: 'wrap',
+                        marginTop: '1rem'
+                      }}>
+                        <button 
+                          className="job-proposal-btn"
+                          onClick={() => handleBidAction(bid.proposalId, 'accepted')}
+                          style={{
+                            background: '#28a745',
+                            border: 'none',
+                            padding: '0.5rem 1rem',
+                            borderRadius: '4px',
+                            color: 'white',
+                            fontSize: '0.875rem',
+                            fontWeight: 'bold',
+                            cursor: 'pointer'
+                          }}
+                        >
+                          ✅ Accept Bid
+                        </button>
+                        <button 
+                          className="job-proposal-btn"
+                          onClick={() => handleBidAction(bid.proposalId, 'rejected')}
+                          style={{
+                            background: '#dc3545',
+                            border: 'none',
+                            padding: '0.5rem 1rem',
+                            borderRadius: '4px',
+                            color: 'white',
+                            fontSize: '0.875rem',
+                            fontWeight: 'bold',
+                            cursor: 'pointer'
+                          }}
+                        >
+                          ❌ Reject Bid
+                        </button>
+                        <button 
+                          className="job-proposal-btn"
+                          onClick={() => openChat(bid.freelancerEmail)}
+                          style={{
+                            background: '#17a2b8',
+                            border: 'none',
+                            padding: '0.5rem 1rem',
+                            borderRadius: '4px',
+                            color: 'white',
+                            fontSize: '0.875rem',
+                            fontWeight: 'bold',
+                            cursor: 'pointer'
+                          }}
+                        >
+                          💬 Chat
+                        </button>
+                      </div>
+                    )}
+
+                    {/* Status-specific actions */}
+                    {bid.status === 'accepted' && (
+                      <div style={{ 
+                        marginTop: '1rem',
+                        padding: '0.5rem 1rem',
+                        background: '#d4edda',
+                        color: '#155724',
+                        borderRadius: '4px',
+                        fontSize: '0.875rem'
+                      }}>
+                        ✅ Bid accepted! You can now start working with this freelancer.
+                        <button 
+                          className="job-proposal-btn"
+                          onClick={() => openChat(bid.freelancerEmail)}
+                          style={{
+                            background: '#28a745',
+                            border: 'none',
+                            padding: '0.5rem 1rem',
+                            borderRadius: '4px',
+                            color: 'white',
+                            fontSize: '0.875rem',
+                            fontWeight: 'bold',
+                            cursor: 'pointer',
+                            marginLeft: '1rem'
+                          }}
+                        >
+                          💬 Chat with Freelancer
+                        </button>
+                      </div>
+                    )}
+
+                    {bid.status === 'rejected' && (
+                      <div style={{ 
+                        marginTop: '1rem',
+                        padding: '0.5rem 1rem',
+                        background: '#f8d7da',
+                        color: '#721c24',
+                        borderRadius: '4px',
+                        fontSize: '0.875rem'
+                      }}>
+                        ❌ Bid rejected. You can still chat with the freelancer if needed.
+                        <button 
+                          className="job-proposal-btn"
+                          onClick={() => openChat(bid.freelancerEmail)}
+                          style={{
+                            background: '#17a2b8',
+                            border: 'none',
+                            padding: '0.5rem 1rem',
+                            borderRadius: '4px',
+                            color: 'white',
+                            fontSize: '0.875rem',
+                            fontWeight: 'bold',
+                            cursor: 'pointer',
+                            marginLeft: '1rem'
+                          }}
+                        >
+                          💬 Chat with Freelancer
+                        </button>
+                      </div>
+                    )}
+
+                    {bid.status === 'under_review' && (
+                      <div style={{ 
+                        marginTop: '1rem',
+                        padding: '0.5rem 1rem',
+                        background: '#fff3cd',
+                        color: '#856404',
+                        borderRadius: '4px',
+                        fontSize: '0.875rem'
+                      }}>
+                        🔍 Bid is under review. You can chat with the freelancer while evaluating.
+                        <button 
+                          className="job-proposal-btn"
+                          onClick={() => openChat(bid.freelancerEmail)}
+                          style={{
+                            background: '#ffc107',
+                            border: 'none',
+                            padding: '0.5rem 1rem',
+                            borderRadius: '4px',
+                            color: '#212529',
+                            fontSize: '0.875rem',
+                            fontWeight: 'bold',
+                            cursor: 'pointer',
+                            marginLeft: '1rem'
+                          }}
+                        >
+                          💬 Chat with Freelancer
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
         </div>
 
         {/* Right Column */}
@@ -595,8 +874,12 @@ export default function ClientDashboard() {
             >
               Post New Proposal
             </button>
-            <button className="job-proposal-btn" style={{ width: '100%', marginBottom: '0.5rem', background: '#6c757d' }}>
-              View Applications
+            <button 
+              className="job-proposal-btn" 
+              style={{ width: '100%', marginBottom: '0.5rem', background: '#6c757d' }}
+              onClick={() => fetchBids(user.email)}
+            >
+              Refresh Bids
             </button>
             <button className="job-proposal-btn" style={{ width: '100%', background: '#17a2b8' }}>
               Message Freelancers

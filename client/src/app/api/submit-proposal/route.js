@@ -39,6 +39,10 @@ export async function POST(request) {
 
     const dbClient = await pool.connect();
     try {
+      // Start a transaction to ensure both operations succeed or fail together
+      await dbClient.query('BEGIN');
+      console.log('Transaction started for proposal submission');
+      
       // Table already exists, just proceed with insert
       console.log('Using existing proposals table');
       
@@ -65,12 +69,45 @@ export async function POST(request) {
       ]);
 
       console.log('Proposal created successfully:', result.rows[0]);
+      
+      // Increment the freelancer's activebids count
+      console.log('Incrementing freelancer activebids count for:', freelancerEmail);
+      const updateFreelancerQuery = `
+        UPDATE freelancer 
+        SET activebids = COALESCE(activebids, 0) + 1
+        WHERE email = $1
+        RETURNING email, activebids
+      `;
+      
+      const freelancerUpdateResult = await dbClient.query(updateFreelancerQuery, [freelancerEmail]);
+      
+      if (freelancerUpdateResult.rows.length > 0) {
+        console.log('✅ Freelancer activebids updated successfully');
+        console.log('Updated freelancer:', freelancerUpdateResult.rows[0]);
+      } else {
+        console.log('⚠️ Freelancer not found or activebids not updated');
+      }
+      
+      // Commit the transaction
+      await dbClient.query('COMMIT');
+      console.log('Transaction committed successfully');
 
       return NextResponse.json({
         message: 'Proposal submitted successfully',
-        proposal: result.rows[0]
+        proposal: result.rows[0],
+        freelancerUpdate: freelancerUpdateResult.rows[0] || null
       }, { status: 201 });
 
+    } catch (dbError) {
+      // Rollback the transaction on error
+      console.error('Database error during proposal submission, rolling back...');
+      try {
+        await dbClient.query('ROLLBACK');
+        console.log('Transaction rolled back successfully');
+      } catch (rollbackError) {
+        console.error('Rollback failed:', rollbackError.message);
+      }
+      throw dbError; // Re-throw to be caught by outer catch block
     } finally {
       dbClient.release();
     }

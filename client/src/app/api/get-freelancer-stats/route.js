@@ -31,11 +31,11 @@ export async function POST(request) {
 
     const dbClient = await pool.connect();
     try {
-      // Query the freelancer table to get stats
+      // Query the freelancer table to get stats and calculate actual activebids
       const query = `
         SELECT 
           COALESCE(activejobs, 0) as activejobs,
-          COALESCE(pendingbids, 0) as activebids
+          COALESCE(activebids, 0) as activebids
         FROM freelancer 
         WHERE metamaskid = $1
       `;
