@@ -7,7 +7,7 @@ body, .homepage-container {
 }
 
 .gradient-bg {
-  background: linear-gradient(90deg, #4b2e83 0%, #ffb23f 100%);
+  background: linear-gradient(90deg, #27187e 0%, #231671 100%);
 }
 
 .dark-gradient-bg {
@@ -34,11 +34,9 @@ body, .homepage-container {
 .logo {
   font-weight: bold;
   font-size: 1.3rem;
-  color: #fff;
   margin-right: 1.5rem;
 }
 .nav-link {
-  color: #fff;
   text-decoration: none;
   margin-right: 1rem;
   transition: color 0.2s;
@@ -46,30 +44,16 @@ body, .homepage-container {
   cursor: pointer;
 }
 .nav-link:hover {
-  color: #ffb23f;
+  color: #ff8600;
 }
 .login-btn, .register-btn {
-  background: #fff;
-  color: #4b2e83;
+  color: #3d2f8b;
   border: none;
   border-radius: 20px;
   padding: 0.5rem 1.5rem;
-  font-weight: bold;
   cursor: pointer;
   margin-left: 1rem;
   transition: background 0.2s, color 0.2s;
-}
-.login-btn:hover, .register-btn:hover {
-  background: #ffb23f;
-  color: #fff;
-}
-.register-btn {
-  background: #ffb23f;
-  color: #fff;
-}
-.register-btn:hover {
-  background: #fff;
-  color: #4b2e83;
 }
 
 /* Hero Section */
