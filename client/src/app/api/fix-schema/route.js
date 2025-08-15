@@ -1,99 +1,85 @@
 import { NextResponse } from 'next/server';
 import pool from '../../../lib/db';
 
-export async function POST() {
+export async function POST(request) {
   try {
     console.log('=== FIX SCHEMA API START ===');
     
+    let requestData;
+    try {
+      requestData = await request.json();
+      console.log('Parsed request data:', requestData);
+    } catch (parseError) {
+      console.error('JSON parse error:', parseError);
+      return NextResponse.json(
+        { error: 'Invalid JSON in request body', details: parseError.message },
+        { status: 400 }
+      );
+    }
+
+    const { action } = requestData;
+    console.log('Action requested:', action);
+
     const dbClient = await pool.connect();
     try {
-      // Check freelancer table and add missing columns
-      console.log('Checking freelancer table schema...');
-      
-      const freelancerExists = await dbClient.query(`
-        SELECT EXISTS (
-          SELECT FROM information_schema.tables 
-          WHERE table_schema = 'public' 
-          AND table_name = 'freelancer'
-        )
-      `);
-
-      if (freelancerExists.rows[0].exists) {
-        console.log('Freelancer table exists, checking for missing columns...');
+      if (action === 'add_activebids_to_freelancer') {
+        console.log('Adding activebids column to freelancer table...');
         
-        // Check for required columns
-        const columnsCheck = await dbClient.query(`
+        // Check if activebids column exists
+        const checkColumnQuery = `
           SELECT column_name 
           FROM information_schema.columns 
-          WHERE table_name = 'freelancer' 
-          AND column_name IN ('activejobs', 'rejectedbids', 'pendingbids')
-        `);
+          WHERE table_name = 'freelancer' AND column_name = 'activebids'
+        `;
         
-        const existingColumns = columnsCheck.rows.map(row => row.column_name);
-        const requiredColumns = ['activejobs', 'rejectedbids', 'pendingbids'];
-        const missingColumns = requiredColumns.filter(col => !existingColumns.includes(col));
+        const columnCheck = await dbClient.query(checkColumnQuery);
         
-        if (missingColumns.length > 0) {
-          console.log('Adding missing columns to freelancer table:', missingColumns);
+        if (columnCheck.rows.length === 0) {
+          console.log('activebids column does not exist, adding it...');
           
-          for (const column of missingColumns) {
-            try {
-              if (column === 'activejobs') {
-                await dbClient.query('ALTER TABLE freelancer ADD COLUMN IF NOT EXISTS activejobs INTEGER DEFAULT 0');
-                console.log(`Added column: ${column}`);
-              } else if (column === 'rejectedbids') {
-                await dbClient.query('ALTER TABLE freelancer ADD COLUMN IF NOT EXISTS rejectedbids INTEGER DEFAULT 0');
-                console.log(`Added column: ${column}`);
-              } else if (column === 'pendingbids') {
-                await dbClient.query('ALTER TABLE freelancer ADD COLUMN IF NOT EXISTS pendingbids INTEGER DEFAULT 0');
-                console.log(`Added column: ${column}`);
-              }
-            } catch (alterError) {
-              console.log(`Column ${column} couldn't be added:`, alterError.message);
-            }
-          }
+          const addColumnQuery = `
+            ALTER TABLE freelancer 
+            ADD COLUMN activebids INTEGER DEFAULT 0
+          `;
+          
+          await dbClient.query(addColumnQuery);
+          console.log('✅ activebids column added successfully');
+          
+          // Update existing records to have activebids = pendingbids for now
+          const updateQuery = `
+            UPDATE freelancer 
+            SET activebids = COALESCE(pendingbids, 0)
+            WHERE activebids IS NULL
+          `;
+          
+          const updateResult = await dbClient.query(updateQuery);
+          console.log(`✅ Updated ${updateResult.rowCount} freelancer records`);
+          
         } else {
-          console.log('Freelancer table has all required columns');
+          console.log('activebids column already exists');
         }
-      } else {
-        console.log('Freelancer table does not exist');
-      }
-
-      // Check client table
-      console.log('Checking client table schema...');
-      const clientExists = await dbClient.query(`
-        SELECT EXISTS (
-          SELECT FROM information_schema.tables 
-          WHERE table_schema = 'public' 
-          AND table_name = 'client'
-        )
-      `);
-
-      if (clientExists.rows[0].exists) {
-        console.log('Client table exists');
-      } else {
-        console.log('Client table does not exist');
-      }
-
-      // Check users table
-      console.log('Checking users table schema...');
-      const usersExists = await dbClient.query(`
-        SELECT EXISTS (
-          SELECT FROM information_schema.tables 
-          WHERE table_schema = 'public' 
-          AND table_name = 'users'
-        )
-      `);
-
-      if (usersExists.rows[0].exists) {
-        console.log('Users table exists');
-      } else {
-        console.log('Users table does not exist');
+        
+        return NextResponse.json({
+          message: 'Schema fix completed',
+          status: 'success',
+          action: action
+        }, { status: 200 });
+        
+      } else if (action === 'add_updatedat_to_proposals') {
+        console.log('Proposals table structure is correct - no updatedat column needed');
+        console.log('Status updates will only modify the status field');
+        
+        return NextResponse.json({
+          message: 'Schema fix completed',
+          status: 'success',
+          action: action
+        }, { status: 200 });
       }
 
       return NextResponse.json({
         message: 'Schema fix completed',
-        status: 'success'
+        status: 'success',
+        action: action
       }, { status: 200 });
 
     } finally {
@@ -104,10 +90,10 @@ export async function POST() {
     console.error('=== FIX SCHEMA API ERROR ===');
     console.error('Error:', error.message);
     
-    return NextResponse.json({
-      message: 'Schema fix failed',
-      error: error.message
-    }, { status: 500 });
+    return NextResponse.json(
+      { error: 'Internal server error', details: error.message },
+      { status: 500 }
+    );
   } finally {
     console.log('=== FIX SCHEMA API END ===');
   }
