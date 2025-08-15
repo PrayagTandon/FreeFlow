@@ -3,6 +3,7 @@ import './home.css';
 import Link from 'next/link';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import GoToTop from './components/GoToTop';
 
 const professionData = [
   {
@@ -200,20 +201,21 @@ export default function HomePage() {
           </div>
         </div>
       )}
+      <main className='h-screen'>
       {/* Navbar */}
-      <nav className="navbar gradient-bg">
+      <nav className="navbar gradient-bg h-16">
         <div className="navbar-left">
-          <span className="logo">Logo</span>
-          <a href="#" className="nav-link" onClick={e => { e.preventDefault(); setHowModalOpen(true); }}>How It Works ▾</a>
-          <a href="#" className="nav-link" onClick={e => e.preventDefault()}>Search ▾</a>
-          <a href="#" className="nav-link" onClick={e => { e.preventDefault(); setAboutOpen(true); }}>About Us</a>
-          <a href="#" className="nav-link" onClick={e => { e.preventDefault(); setContactOpen(true); }}>Contact Us</a>
-          <a href="#" className="nav-link" onClick={e => { e.preventDefault(); setResourcesOpen(true); }}>Resources</a>
-          <a href="#" className="nav-link">Pricing</a>
+          <span className="logo text-primary-off-white">Logo</span>
+          <a href="#" className="nav-link text-primary-off-white" onClick={e => { e.preventDefault(); setHowModalOpen(true); }}>How It Works ▾</a>
+          <a href="#" className="nav-link text-primary-off-white" onClick={e => e.preventDefault()}>Search ▾</a>
+          <a href="#" className="nav-link text-primary-off-white" onClick={e => { e.preventDefault(); setAboutOpen(true); }}>About Us</a>
+          <a href="#" className="nav-link text-primary-off-white" onClick={e => { e.preventDefault(); setContactOpen(true); }}>Contact Us</a>
+          <a href="#" className="nav-link text-primary-off-white" onClick={e => { e.preventDefault(); setResourcesOpen(true); }}>Resources</a>
+          <a href="#" className="nav-link text-primary-off-white">Pricing</a>
         </div>
         <div className="navbar-right">
-          <Link href="/login" className="login-btn">Log In</Link>
-          <Link href="/register" className="register-btn">Register</Link>
+          <Link href="/login" className="login-btn bg-primary-off-white font-semibold">Log In</Link>
+          <Link href="/register" className="register-btn font-semibold bg-secondary-orange">Register</Link>
         </div>
       </nav>
 
@@ -229,7 +231,7 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-
+      </main>
       {/* Professions Section */}
       <section className="professions-section">
         <h2>Explore Different <span className="highlight">Professions</span>, Get Paid With <span className="highlight">Trust</span></h2>
@@ -402,6 +404,7 @@ export default function HomePage() {
           <span>© {new Date().getFullYear()} FreeFlow. All rights reserved.</span>
         </div>
       </footer>
+      <GoToTop />
     </div>
   );
 }
