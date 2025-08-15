@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 import ChatSystem from '../../components/ChatSystem';
+import BidAcceptanceForm from '../../components/BidAcceptanceForm';
 
 export default function ClientDashboard() {
   const router = useRouter();
@@ -31,6 +32,10 @@ export default function ClientDashboard() {
   // Chat system state
   const [showChat, setShowChat] = useState(false);
   const [selectedChatBid, setSelectedChatBid] = useState(null);
+
+  // Bid acceptance form state
+  const [showAcceptanceForm, setShowAcceptanceForm] = useState(false);
+  const [selectedBidForAcceptance, setSelectedBidForAcceptance] = useState(null);
 
   // Stats (will be calculated from real data)
   const totalProjects = proposals.length;
@@ -138,6 +143,45 @@ export default function ClientDashboard() {
     });
     setSelectedChatBid(bid);
     setShowChat(true);
+  };
+
+  const openAcceptanceForm = (bid) => {
+    console.log('🔍 Client Dashboard: Opening acceptance form for bid:', bid);
+    setSelectedBidForAcceptance(bid);
+    setShowAcceptanceForm(true);
+  };
+
+  const handleBidAcceptance = async (formData) => {
+    try {
+      console.log('🔍 Client Dashboard: Submitting bid acceptance:', formData);
+      
+      // Here you would typically:
+      // 1. Update the bid status to 'accepted' in the database
+      // 2. Create a smart contract agreement
+      // 3. Update freelancer stats
+      
+      // For now, we'll just log the data and close the form
+      console.log('✅ Bid acceptance data:', {
+        ...formData,
+        proposalId: selectedBidForAcceptance.proposalId,
+        jobId: selectedBidForAcceptance.jobId
+      });
+      
+      // TODO: Implement actual bid acceptance logic
+      // await updateBidStatus(selectedBidForAcceptance.proposalId, 'accepted');
+      // await createSmartContractAgreement(formData);
+      
+      // Close the form
+      setShowAcceptanceForm(false);
+      setSelectedBidForAcceptance(null);
+      
+      // Show success message (you could add a toast notification here)
+      alert('Bid accepted successfully! Smart contract agreement created.');
+      
+    } catch (error) {
+      console.error('❌ Error accepting bid:', error);
+      alert('Error accepting bid. Please try again.');
+    }
   };
 
   const refreshUserData = async (email) => {
@@ -711,7 +755,7 @@ export default function ClientDashboard() {
                       }}>
                         <button 
                           className="job-proposal-btn"
-                          onClick={() => handleBidAction(bid.proposalId, 'accepted')}
+                          onClick={() => openAcceptanceForm(bid)}
                           style={{
                             background: '#28a745',
                             border: 'none',
@@ -921,6 +965,18 @@ export default function ClientDashboard() {
             setShowChat(false);
             setSelectedChatBid(null);
           }}
+        />
+      )}
+
+      {/* Bid Acceptance Form */}
+      {showAcceptanceForm && selectedBidForAcceptance && (
+        <BidAcceptanceForm
+          bid={selectedBidForAcceptance}
+          onClose={() => {
+            setShowAcceptanceForm(false);
+            setSelectedBidForAcceptance(null);
+          }}
+          onSubmit={handleBidAcceptance}
         />
       )}
 
