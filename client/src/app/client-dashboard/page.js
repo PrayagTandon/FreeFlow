@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
+import ChatSystem from '../../components/ChatSystem';
 
 export default function ClientDashboard() {
   const router = useRouter();
@@ -26,6 +27,10 @@ export default function ClientDashboard() {
   const [loadingProposals, setLoadingProposals] = useState(false);
   const [bids, setBids] = useState([]);
   const [loadingBids, setLoadingBids] = useState(false);
+  
+  // Chat system state
+  const [showChat, setShowChat] = useState(false);
+  const [selectedChatBid, setSelectedChatBid] = useState(null);
 
   // Stats (will be calculated from real data)
   const totalProjects = proposals.length;
@@ -123,9 +128,16 @@ export default function ClientDashboard() {
     }
   };
 
-  const openChat = (freelancerEmail) => {
-    // TODO: Implement chat functionality
-    alert(`Chat with ${freelancerEmail} - Feature coming soon!`);
+  const openChat = (bid) => {
+    console.log('🔍 Client Dashboard: Opening chat with bid:', bid);
+    console.log('🔍 Client Dashboard: Bid object structure:', {
+      proposalId: bid?.proposalId,
+      jobTitle: bid?.jobTitle,
+      freelancerEmail: bid?.freelancerEmail,
+      clientEmail: bid?.clientEmail
+    });
+    setSelectedChatBid(bid);
+    setShowChat(true);
   };
 
   const refreshUserData = async (email) => {
@@ -731,7 +743,7 @@ export default function ClientDashboard() {
                         </button>
                         <button 
                           className="job-proposal-btn"
-                          onClick={() => openChat(bid.freelancerEmail)}
+                          onClick={() => openChat(bid)}
                           style={{
                             background: '#17a2b8',
                             border: 'none',
@@ -759,23 +771,23 @@ export default function ClientDashboard() {
                         fontSize: '0.875rem'
                       }}>
                         ✅ Bid accepted! You can now start working with this freelancer.
-                        <button 
-                          className="job-proposal-btn"
-                          onClick={() => openChat(bid.freelancerEmail)}
-                          style={{
-                            background: '#28a745',
-                            border: 'none',
-                            padding: '0.5rem 1rem',
-                            borderRadius: '4px',
-                            color: 'white',
-                            fontSize: '0.875rem',
-                            fontWeight: 'bold',
-                            cursor: 'pointer',
-                            marginLeft: '1rem'
-                          }}
-                        >
-                          💬 Chat with Freelancer
-                        </button>
+                                   <button 
+             className="job-proposal-btn"
+             onClick={() => openChat(bid)}
+             style={{
+               background: '#28a745',
+               border: 'none',
+               padding: '0.5rem 1rem',
+               borderRadius: '4px',
+               color: 'white',
+               fontSize: '0.875rem',
+               fontWeight: 'bold',
+               cursor: 'pointer',
+               marginLeft: '1rem'
+             }}
+           >
+             💬 Chat with Freelancer
+           </button>
                       </div>
                     )}
 
@@ -789,23 +801,23 @@ export default function ClientDashboard() {
                         fontSize: '0.875rem'
                       }}>
                         ❌ Bid rejected. You can still chat with the freelancer if needed.
-                        <button 
-                          className="job-proposal-btn"
-                          onClick={() => openChat(bid.freelancerEmail)}
-                          style={{
-                            background: '#17a2b8',
-                            border: 'none',
-                            padding: '0.5rem 1rem',
-                            borderRadius: '4px',
-                            color: 'white',
-                            fontSize: '0.875rem',
-                            fontWeight: 'bold',
-                            cursor: 'pointer',
-                            marginLeft: '1rem'
-                          }}
-                        >
-                          💬 Chat with Freelancer
-                        </button>
+                                   <button 
+             className="job-proposal-btn"
+             onClick={() => openChat(bid)}
+             style={{
+               background: '#17a2b8',
+               border: 'none',
+               padding: '0.5rem 1rem',
+               borderRadius: '4px',
+               color: 'white',
+               fontSize: '0.875rem',
+               fontWeight: 'bold',
+               cursor: 'pointer',
+               marginLeft: '1rem'
+             }}
+           >
+             💬 Chat with Freelancer
+           </button>
                       </div>
                     )}
 
@@ -819,23 +831,23 @@ export default function ClientDashboard() {
                         fontSize: '0.875rem'
                       }}>
                         🔍 Bid is under review. You can chat with the freelancer while evaluating.
-                        <button 
-                          className="job-proposal-btn"
-                          onClick={() => openChat(bid.freelancerEmail)}
-                          style={{
-                            background: '#ffc107',
-                            border: 'none',
-                            padding: '0.5rem 1rem',
-                            borderRadius: '4px',
-                            color: '#212529',
-                            fontSize: '0.875rem',
-                            fontWeight: 'bold',
-                            cursor: 'pointer',
-                            marginLeft: '1rem'
-                          }}
-                        >
-                          💬 Chat with Freelancer
-                        </button>
+                                   <button 
+             className="job-proposal-btn"
+             onClick={() => openChat(bid)}
+             style={{
+               background: '#ffc107',
+               border: 'none',
+               padding: '0.5rem 1rem',
+               borderRadius: '4px',
+               color: '#212529',
+               fontSize: '0.875rem',
+               fontWeight: 'bold',
+               cursor: 'pointer',
+               marginLeft: '1rem'
+             }}
+           >
+             💬 Chat with Freelancer
+           </button>
                       </div>
                     )}
                   </div>
@@ -896,6 +908,21 @@ export default function ClientDashboard() {
           </div>
         </div>
       </div>
+
+      {/* Chat System */}
+      {showChat && selectedChatBid && (
+        <ChatSystem
+          userEmail={user.metamaskid}
+          userRole="client"
+          proposalId={selectedChatBid.proposalId}
+          otherPartyEmail={selectedChatBid.freelancerMetamaskId || selectedChatBid.freelancerEmail}
+          jobTitle={selectedChatBid.jobTitle}
+          onClose={() => {
+            setShowChat(false);
+            setSelectedChatBid(null);
+          }}
+        />
+      )}
 
       {/* Footer */}
       <footer className="footer improved-footer-gradient">

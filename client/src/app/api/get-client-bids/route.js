@@ -32,6 +32,8 @@ export async function GET(request) {
           p.submittedat,
           p.fromemail as freelancer_email,
           p.toemail as client_email,
+          f.metamaskid as freelancer_metamaskid,
+          c.metamaskid as client_metamaskid,
           j.name as job_title,
           j.description as job_description,
           j.budget as job_budget,
@@ -42,6 +44,8 @@ export async function GET(request) {
           j.validtill
         FROM proposals p
         INNER JOIN jobposted j ON p.jobid = j.id
+        INNER JOIN freelancer f ON p.fromemail = f.email
+        INNER JOIN client c ON p.toemail = c.email
         WHERE p.toemail = $1
         ORDER BY p.submittedat DESC
       `;
@@ -68,7 +72,9 @@ export async function GET(request) {
           status: bid.status,
           submittedAt: bid.submittedat,
           freelancerEmail: bid.freelancer_email,
-          clientEmail: bid.client_email
+          clientEmail: bid.client_email,
+          freelancerMetamaskId: bid.freelancer_metamaskid,
+          clientMetamaskId: bid.client_metamaskid
         }))
       }, { status: 200 });
 

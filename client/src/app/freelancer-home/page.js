@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
+import ChatSystem from '../../components/ChatSystem';
 
 const trustBreakdown = [
   { color: '#FFB23F', label: 'Default Trust', percent: 20 },
@@ -38,6 +39,10 @@ export default function FreelancerHome() {
   const [myBids, setMyBids] = useState([]);
   const [loadingBids, setLoadingBids] = useState(false);
   const [withdrawingBid, setWithdrawingBid] = useState(null);
+  
+  // Chat system state
+  const [showChat, setShowChat] = useState(false);
+  const [selectedChatBid, setSelectedChatBid] = useState(null);
   
   // Stats (now fetched from backend)
   const trustScore = 100;
@@ -147,6 +152,11 @@ export default function FreelancerHome() {
     } finally {
       setLoadingBids(false);
     }
+  };
+
+  const openChat = (bid) => {
+    setSelectedChatBid(bid);
+    setShowChat(true);
   };
 
   const handleWithdrawBid = async (proposalId) => {
@@ -763,6 +773,23 @@ export default function FreelancerHome() {
                             {withdrawingBid === bid.proposalId ? 'Withdrawing...' : 'Withdraw Bid'}
                           </button>
                         )}
+                        
+                        {/* Chat button for all bid statuses */}
+                        <button
+                          onClick={() => openChat(bid)}
+                          style={{
+                            background: '#28a745',
+                            border: 'none',
+                            padding: '0.5rem 1rem',
+                            borderRadius: '4px',
+                            color: 'white',
+                            fontSize: '0.875rem',
+                            fontWeight: 'bold',
+                            cursor: 'pointer'
+                          }}
+                        >
+                          💬 Chat with Client
+                        </button>
                       </div>
                     </div>
                   </div>
@@ -794,6 +821,21 @@ export default function FreelancerHome() {
             )}
           </div>
         </div>
+      )}
+
+      {/* Chat System */}
+      {showChat && selectedChatBid && (
+        <ChatSystem
+          userEmail={user.metamaskid}
+          userRole="freelancer"
+          proposalId={selectedChatBid.proposalId}
+          otherPartyEmail={selectedChatBid.clientMetamaskId || selectedChatBid.clientEmail}
+          jobTitle={selectedChatBid.jobTitle}
+          onClose={() => {
+            setShowChat(false);
+            setSelectedChatBid(null);
+          }}
+        />
       )}
 
       {/* Footer (reuse from homepage) */}
